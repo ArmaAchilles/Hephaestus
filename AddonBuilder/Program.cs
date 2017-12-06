@@ -60,8 +60,8 @@ namespace AddonBuilder
             HandleFiles(ArmaFolder, AddonBuilderDir, privateKeyDir, privateKeyPrefix, privateKeyVersion);
 
             // Get the Addon Builder exe
-            //string AddonBuilderExe = AddonBuilderDir + "\\" + "AddonBuilder.exe";
-            string AddonBuilderExe = "E:\\Games\\SteamApps\\common\\Arma 3 Tools\\AddonBuilder\\AddonBuilder.exe";
+            string AddonBuilderExe = AddonBuilderDir + "\\" + "AddonBuilder.exe";
+
             // Close Arma if open
             if (shutdownArma)
             {
