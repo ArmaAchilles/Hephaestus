@@ -3,6 +3,8 @@ using IniParser.Model;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Threading;
+using System.Reflection;
 
 namespace AddonBuilder
 {
@@ -12,9 +14,13 @@ namespace AddonBuilder
 
         static void Main(string[] args)
         {
+            // Get version number
+            string version = Assembly.GetCallingAssembly().GetName().Version.ToString();
+
             // Show our info
-            Console.WriteLine("Launching Addon Builder v1.0.0");
+            Console.WriteLine("Launching Addon Builder v"+ version);
             Console.WriteLine("Made by CreepPork_LV");
+            Console.WriteLine("========");
 
             // If config.ini was not found, display error
             if (!File.Exists("config.ini"))
@@ -37,8 +43,10 @@ namespace AddonBuilder
 
             string ArmaFolder = data["ArmaInformation"]["ArmaFolder"];
             string AddonBuilderDir = data["ArmaInformation"]["AddonBuilderDir"];
-
-            bool ShutdownArma = bool.Parse(data["Misc"]["ShutdownArma"]);
+            bool shutdownArma = bool.Parse(data["ArmaInformation"]["ShutdownArma"]);
+            bool openArma = bool.Parse(data["ArmaInformation"]["OpenArma"]);
+            string ArmaExecutable = data["ArmaInformation"]["OpenArmaExecutable"];
+            string openArmaArguments = data["ArmaInformation"]["OpenArmaArguments"];
 
             // Check if any arguments were passed (version number)
             if (args.Length > 0)
@@ -52,10 +60,10 @@ namespace AddonBuilder
             HandleFiles(ArmaFolder, AddonBuilderDir, privateKeyDir, privateKeyPrefix, privateKeyVersion);
 
             // Get the Addon Builder exe
-            string AddonBuilderExe = AddonBuilderDir + "\\" + "AddonBuilder.exe";
-
+            //string AddonBuilderExe = AddonBuilderDir + "\\" + "AddonBuilder.exe";
+            string AddonBuilderExe = "E:\\Games\\SteamApps\\common\\Arma 3 Tools\\AddonBuilder\\AddonBuilder.exe";
             // Close Arma if open
-            if (ShutdownArma)
+            if (shutdownArma)
             {
                 HandleArmaClose();
             }
@@ -68,7 +76,9 @@ namespace AddonBuilder
             string privateKey = privateKeyDir + "\\" + privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
 
             // Handle the building of the addons
-            HandleBuild(AddonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix);
+            HandleBuild(AddonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix, openArma, openArmaArguments, ArmaFolder, ArmaExecutable);
+
+            Console.WriteLine("Finished all tasks. Exiting!");
         }
 
         /// <summary>
@@ -171,6 +181,8 @@ namespace AddonBuilder
             }
         }
 
+        static bool haveAllBuildersClosed = false;
+
         /// <summary>
         /// Handle the building of the folders to get the magical PBOs
         /// </summary>
@@ -179,32 +191,122 @@ namespace AddonBuilder
         /// <param name="target">Target directory where the built PBOs will be placed</param>
         /// <param name="privateKey">The private key full path</param>
         /// <param name="projectPrefix">Project prefix</param>
-        public static void HandleBuild(string AddonBuilder, string source, string target, string privateKey, string projectPrefix)
+        /// <param name="openArma">Should we open Arma after build is complete?</param>
+        /// <param name="openArmaArguments">Arguments to launch Arma with</param>
+        /// <param name="ArmaFolder">Arma 3 Folder</param>
+        /// <param name="ArmaExecutable">Executable of Arma (arma3.exe or arma3_x64.exe)</param>
+        public static void HandleBuild(string AddonBuilder, string source, string target, string privateKey, string projectPrefix, bool openArma, string openArmaArguments, string ArmaFolder, string ArmaExecutable)
         {
             string[] folders = Directory.GetDirectories(source);
+
+            int folderCount = folders.Length;
 
             if (hasPrivateKey)
             {
                 foreach (var folder in folders)
                 {
-                    ProcessStartInfo start = new ProcessStartInfo()
+                    try
                     {
-                        Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + Path.GetFileName(folder) + " -binarizeFullLogs",
-                        FileName = AddonBuilder
-                    };
-                    Process.Start(start);
+                        Process builder = new Process();
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + Path.GetFileName(folder) + " -binarizeFullLogs";
+                        builder.StartInfo.FileName = AddonBuilder;
+
+                        if (openArma)
+                        {
+                            builder.EnableRaisingEvents = true;
+                            builder.Exited += (sender, e) => BuilderExit(sender, e, folderCount, openArmaArguments, ArmaFolder, ArmaExecutable);
+                            
+                        }
+                        builder.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to start Addon Builder!");
+                        Console.WriteLine("Error is: " + ex);
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        Environment.Exit(1);
+                    }
+                }
+
+                if (openArma)
+                {
+                    while (!haveAllBuildersClosed)
+                    {
+                        Thread.Sleep(100);
+                    }
                 }
             }
+            // If signing omitted
             else
             {
                 foreach (var folder in folders)
                 {
-                    ProcessStartInfo start = new ProcessStartInfo()
+                    try
                     {
-                        Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -prefix=" + "\"" + projectPrefix + "\"" + "\\" + Path.GetFileName(folder) + " -binarizeFullLogs",
-                        FileName = AddonBuilder
-                    };
-                    Process.Start(start);
+                        Process builder = new Process();
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -prefix=" + "\"" + projectPrefix + "\"" + "\\" + Path.GetFileName(folder) + " -binarizeFullLogs";
+                        builder.StartInfo.FileName = AddonBuilder;
+
+                        if (openArma)
+                        {
+                            builder.EnableRaisingEvents = true;
+                            builder.Exited += (sender, e) => BuilderExit(sender, e, folderCount, openArmaArguments, ArmaFolder, ArmaExecutable);
+                        }
+                        
+                        builder.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Failed to start Addon Builder!");
+                        Console.WriteLine("Error is: " + ex);
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey();
+                        Environment.Exit(1);
+                    }
+                }
+
+                if (openArma)
+                {
+                    while (!haveAllBuildersClosed)
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+            }
+        }
+
+        static int closedBuilders = 0;
+        /// <summary>
+        /// Handles the exit of each builder and when all of the builders have exited, then start up Arma 3.
+        /// </summary>
+        /// <param name="sender">Builder object</param>
+        /// <param name="e">Event arguments</param>
+        /// <param name="folderCount">Number of folders (number of builders launched)</param>
+        /// <param name="openArmaArguments">Arguments to open Arma with</param>
+        /// <param name="ArmaFolder">Arma 3 Folder</param>
+        /// <param name="ArmaExecutable">Arma 3 Executable to launch the game with (arma3.exe or arma3_x64.exe)</param>
+        private static void BuilderExit(object sender, EventArgs e, int folderCount, string openArmaArguments, string ArmaFolder, string ArmaExecutable)
+        {
+            closedBuilders++;
+            if (closedBuilders == folderCount)
+            {
+                haveAllBuildersClosed = true;
+                try
+                {
+                    Console.WriteLine("All builders finished, opening Arma 3!");
+                    Process Arma = new Process();
+                    Arma.StartInfo.Arguments = openArmaArguments;
+                    Arma.StartInfo.FileName = ArmaFolder + "\\" + ArmaExecutable;
+                    Arma.Start();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Failed to start Arma 3!");
+                    Console.WriteLine("Error is: " + ex);
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey();
+                    Environment.Exit(1);
                 }
             }
         }
