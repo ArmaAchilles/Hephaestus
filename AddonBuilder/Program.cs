@@ -38,6 +38,8 @@ namespace AddonBuilder
             string ArmaFolder = data["ArmaInformation"]["ArmaFolder"];
             string AddonBuilderDir = data["ArmaInformation"]["AddonBuilderDir"];
 
+            bool ShutdownArma = bool.Parse(data["Misc"]["ShutdownArma"]);
+
             // Check if any arguments were passed (version number)
             if (args.Length > 0)
             {
@@ -53,7 +55,14 @@ namespace AddonBuilder
             string AddonBuilderExe = AddonBuilderDir + "\\" + "AddonBuilder.exe";
 
             // Close Arma if open
-            HandleArmaClose();
+            if (ShutdownArma)
+            {
+                HandleArmaClose();
+            }
+            else
+            {
+                Console.WriteLine("Found Arma 3 open, not shutting down!");
+            }
 
             // Get the private key full path
             string privateKey = privateKeyDir + "\\" + privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
