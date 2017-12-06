@@ -10,7 +10,7 @@ To download Addon Builder go to the [releases tab](https://github.com/ArmaAchill
 
 ## Features
 - Supports custom key versions by launching with the first parameter, e.g. 0.1.0.
-- Closes Arma 3 and awaits full closure before starting the building of the addon folders.
+- Closes Arma 3 and awaits full closure before starting the building of the addon folders (if configured).
 - Supports launching with no key to not sign the addon.
 - Builds addons in parallel to short down building times.
 - Builds PBOs, what did you expect?
