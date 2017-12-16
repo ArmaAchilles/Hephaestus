@@ -285,7 +285,7 @@ namespace AddonBuilder
                         Hash[] hashes = hashesToChange.ToArray();
                         foreach (var hash in hashes)
                         {
-                            data["Checksums"].AddKey(hash.HashKey, hash.HashValue);
+                            data["Checksums"].AddKey(hash.checksumName, hash.hash);
                         }
                     }
                     parser.WriteFile("config.ini", data);
@@ -367,16 +367,13 @@ namespace AddonBuilder
 
     public class Hash
     {
-        private string checksumName;
-        private string hash;
+        public string checksumName;
+        public string hash;
 
         public Hash(string checksumName, string hash)
         {
             this.checksumName = checksumName;
             this.hash = hash;
         }
-
-        public string HashKey { get; set; }
-        public string HashValue { get; set; }
     }
 }
