@@ -301,7 +301,7 @@ namespace AddonBuilder
                             Process Arma = new Process();
                             Arma.StartInfo.Arguments = openArmaArguments;
                             Arma.StartInfo.FileName = ArmaFolder + "\\" + ArmaExecutable;
-                            //Arma.Start();
+                            Arma.Start();
                             break;
                         }
                         catch (Exception ex)
@@ -350,7 +350,7 @@ namespace AddonBuilder
                         Process Arma = new Process();
                         Arma.StartInfo.Arguments = openArmaArguments;
                         Arma.StartInfo.FileName = ArmaFolder + "\\" + ArmaExecutable;
-                        //Arma.Start();
+                        Arma.Start();
                     }
                     catch (Exception ex)
                     {
