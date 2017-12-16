@@ -14,6 +14,8 @@ To download Addon Builder go to the [releases tab](https://github.com/ArmaAchill
 - Supports launching with no key to not sign the addon.
 - Builds addons in parallel to short down building times.
 - After completion of building, auto-launches Arma 3 (configurable).
+- Checks SHA1 checksums of all code folders and builds only if at least one of them is modified
+- Stores all temporary files into a one tidy folder in temp (for quick and easy removal of cached files).
 - Builds PBOs, what did you expect?
 
 ## Credits
