@@ -190,6 +190,7 @@ namespace AddonBuilder
 
         static bool haveAllBuildersClosed = false;
         static int buildersNotLaunched = 0;
+        static int closedBuilders = 0;
 
         /// <summary>
         /// Handle the building of the folders to get the magical PBOs
@@ -278,6 +279,7 @@ namespace AddonBuilder
 
             while (!haveAllBuildersClosed | buildersNotLaunched == folderCount)
             {
+                Thread.Sleep(100);
                 if (hashesToChange.Count > 0 | addedHashes > 0)
                 {
                     if (hashesToChange.Count > 0)
@@ -285,6 +287,7 @@ namespace AddonBuilder
                         Hash[] hashes = hashesToChange.ToArray();
                         foreach (var hash in hashes)
                         {
+                            data["Checksums"].RemoveKey(hash.checksumName);
                             data["Checksums"].AddKey(hash.checksumName, hash.hash);
                         }
                     }
@@ -313,19 +316,17 @@ namespace AddonBuilder
                             Environment.Exit(1);
                         }
                     }
-                    else
-                    {
-                        Thread.Sleep(100);
-                    }
                 }
                 else
                 {
-                    break;
+                    if (buildersNotLaunched + closedBuilders == folderCount)
+                    {
+                        break;
+                    }
                 }
             }
         }
 
-        static int closedBuilders = 0;
         /// <summary>
         /// Handles the exit of each builder and when all of the builders have exited, then start up Arma 3.
         /// </summary>
