@@ -19,7 +19,7 @@ namespace AddonBuilder
             string version = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine($"Launching Addon Builder v{version}");
+            Console.WriteLine("Launching Addon Builder v" + version);
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
