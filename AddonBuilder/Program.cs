@@ -19,14 +19,15 @@ namespace AddonBuilder
             string version = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine("Launching Addon Builder v"+ version);
+            Console.WriteLine($"Launching Addon Builder v{version}");
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
-            // If config.ini was not found, display error
+            // If config.ini was not found, display an error
             if (!File.Exists("config.ini"))
             {
-                throw new FileNotFoundException("Failed to find the config.ini file!");
+                ShowConsoleErrorMsg("Failed to find the config.ini file.");
+                Environment.Exit(1);
             }
 
             // Read our .ini info
@@ -94,17 +95,19 @@ namespace AddonBuilder
         {
             if (!Directory.Exists(source))
             {
-                throw new DirectoryNotFoundException("Failed to find the source folder!");
+                ShowConsoleErrorMsg($"The given source path does not exist or does not represent a valid path:\n {source}");
+                Environment.Exit(1);
             }
 
             if (Directory.GetDirectories(source).Length == 0)
             {
-                throw new DirectoryNotFoundException("Failed to find PBO folders in the source directory!");
+                ShowConsoleErrorMsg($"The given source path does not contain any buildable folders:\n {source}");
+                Environment.Exit(1);
             }
 
             if (!Directory.Exists(target))
             {
-                Console.WriteLine("Target directory does not exist! Creating new folder!");
+                Console.WriteLine("Target directory does not exist! Creating folder!");
                 Directory.CreateDirectory(target);
             }
 
@@ -115,12 +118,14 @@ namespace AddonBuilder
 
             if (!Directory.Exists(ArmaFolder))
             {
-                throw new DirectoryNotFoundException("Failed to find the Arma 3 directory!");
+                ShowConsoleErrorMsg($"The given path to the Arma 3 game directory does not exist or does not represent a valid path:\n {ArmaFolder}");
+                Environment.Exit(1);
             }
 
             if (!Directory.Exists(AddonBuilder))
             {
-                throw new DirectoryNotFoundException("Failed to find the Addon Builder directory!");
+                ShowConsoleErrorMsg($"The given path to the Arma 3 Addon Builder does not exist or does not represent a valid path:\n {AddonBuilder}");
+                Environment.Exit(1);
             }
 
             if (!Directory.Exists(Path.GetTempPath() + "\\" + projectPrefix))
@@ -138,26 +143,28 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key folder</param>
         /// <param name="privateKeyPrefix">Private key prefix</param>
         /// <param name="privateKeyVersion">Private key version (default or one from the argument)</param>
-        public static void HandleFiles (string ArmaFolder, string AddonBuilder, string privateKey, string privateKeyPrefix, string privateKeyVersion)
+        public static void HandleFiles(string ArmaFolder, string AddonBuilder, string privateKey, string privateKeyPrefix, string privateKeyVersion)
         {
             string privateKeyName = privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
-            if (!File.Exists(privateKey+"\\"+privateKeyName))
+            if (!File.Exists(privateKey + "\\" + privateKeyName))
             {
-                Console.WriteLine("No private key has been found! Skiping signing of the PBOs!");
+                Console.WriteLine("No private key has been found! Skipping the signing of the PBOs!");
             }
             else
             {
                 hasPrivateKey = true;
             }
 
-            if (!File.Exists(ArmaFolder+"\\"+"arma3_x64.exe") | !File.Exists(ArmaFolder + "\\" + "arma3.exe"))
+            if (!File.Exists(ArmaFolder + "\\" + "arma3_x64.exe") | !File.Exists(ArmaFolder + "\\" + "arma3.exe"))
             {
-                throw new FileNotFoundException("Failed to find the Arma 3 executable file!");
+                ShowConsoleErrorMsg($"The given Arma 3 game path does not contain any valid Arma 3 executables:\n {ArmaFolder}");
+                Environment.Exit(1);
             }
 
             if (!File.Exists(AddonBuilder + "\\" + "AddonBuilder.exe"))
             {
-                throw new FileNotFoundException("Failed to find the Addon Builder executable file!");
+                ShowConsoleErrorMsg($"The given Addon Builder path does not contain a valid Addon Builder executable:\n {AddonBuilder}");
+                Environment.Exit(1);
             }
         }
 
@@ -176,7 +183,7 @@ namespace AddonBuilder
                 if (ProcessName == processName32 | ProcessName == processName64)
                 {
                     Console.WriteLine("Found Arma 3 open, closing!");
-                    
+
                     if (!proc.HasExited)
                     {
                         proc.CloseMainWindow();
@@ -214,7 +221,7 @@ namespace AddonBuilder
             IniData data = parser.ReadFile("config.ini");
 
             int addedHashes = 0;
-            List<Hash> hashesToChange = new List<Hash>();            
+            List<Hash> hashesToChange = new List<Hash>();
 
             foreach (var folder in folders)
             {
@@ -226,7 +233,7 @@ namespace AddonBuilder
 
                     if (hasPrivateKey)
                     {
-                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp="+ "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp=" + "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
                     }
                     else
                     {
@@ -300,7 +307,7 @@ namespace AddonBuilder
                     {
                         try
                         {
-                           Console.WriteLine("Nothing built, opening Arma 3!");
+                            Console.WriteLine("Nothing built, opening Arma 3!");
                             Process Arma = new Process();
                             Arma.StartInfo.Arguments = openArmaArguments;
                             Arma.StartInfo.FileName = ArmaFolder + "\\" + ArmaExecutable;
@@ -335,7 +342,7 @@ namespace AddonBuilder
         /// <param name="folderCount">Number of folders (number of builders launched)</param>
         /// <param name="openArmaArguments">Arguments to open Arma with</param>
         /// <param name="ArmaFolder">Arma 3 Folder</param>
-        /// <param name="ArmaExecutable">Arma 3 Executable to launch the game with </param>
+        /// <param name="ArmaExecutable">Arma 3 Executable to launch the game with</param>
         /// <param name="openArma">Should we open Arma?</param>
         private static void BuilderExit(object sender, EventArgs e, int folderCount, string openArmaArguments, string ArmaFolder, string ArmaExecutable, bool openArma)
         {
@@ -363,6 +370,20 @@ namespace AddonBuilder
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Helper method that displays a given message in the console in red indicating an error.
+        /// </summary>
+        /// <param name="message">The message to display in the console</param>
+        static void ShowConsoleErrorMsg(string message)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine($"\n {message}");
+            Console.ResetColor();
+            Console.WriteLine("\nPress any key to continue.");
+            Console.ReadKey();
         }
     }
 
