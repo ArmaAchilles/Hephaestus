@@ -21,3 +21,4 @@ To download Addon Builder go to the [releases tab](https://github.com/ArmaAchill
 ## Credits
 - CreepPork_LV
 - [ranta](https://social.msdn.microsoft.com/profile/ranta/?ws=usercard-mini) for hashing methods
+- [MaliceGFS](https://github.com/MaliceGFS) for QoL improvements
