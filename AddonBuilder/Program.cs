@@ -11,7 +11,7 @@ namespace AddonBuilder
 {
     class Program
     {
-        static bool hasPrivateKey = false;
+        static bool HasPrivateKey { get; set; } = false;
 
         static void Main(string[] args)
         {
@@ -19,7 +19,7 @@ namespace AddonBuilder
             string version = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine("Launching Addon Builder v"+ version);
+            Console.WriteLine("Launching Addon Builder v" + version);
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
@@ -138,19 +138,19 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key folder</param>
         /// <param name="privateKeyPrefix">Private key prefix</param>
         /// <param name="privateKeyVersion">Private key version (default or one from the argument)</param>
-        public static void HandleFiles (string ArmaFolder, string AddonBuilder, string privateKey, string privateKeyPrefix, string privateKeyVersion)
+        public static void HandleFiles(string ArmaFolder, string AddonBuilder, string privateKey, string privateKeyPrefix, string privateKeyVersion)
         {
             string privateKeyName = privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
-            if (!File.Exists(privateKey+"\\"+privateKeyName))
+            if (!File.Exists(privateKey + "\\" + privateKeyName))
             {
                 Console.WriteLine("No private key has been found! Skiping signing of the PBOs!");
             }
             else
             {
-                hasPrivateKey = true;
+                HasPrivateKey = true;
             }
 
-            if (!File.Exists(ArmaFolder+"\\"+"arma3_x64.exe") | !File.Exists(ArmaFolder + "\\" + "arma3.exe"))
+            if (!File.Exists(ArmaFolder + "\\" + "arma3_x64.exe") | !File.Exists(ArmaFolder + "\\" + "arma3.exe"))
             {
                 throw new FileNotFoundException("Failed to find the Arma 3 executable file!");
             }
@@ -176,7 +176,7 @@ namespace AddonBuilder
                 if (ProcessName == processName32 | ProcessName == processName64)
                 {
                     Console.WriteLine("Found Arma 3 open, closing!");
-                    
+
                     if (!proc.HasExited)
                     {
                         proc.CloseMainWindow();
@@ -214,7 +214,7 @@ namespace AddonBuilder
             IniData data = parser.ReadFile("config.ini");
 
             int addedHashes = 0;
-            List<Hash> hashesToChange = new List<Hash>();            
+            List<Hash> hashesToChange = new List<Hash>();
 
             foreach (var folder in folders)
             {
@@ -224,9 +224,9 @@ namespace AddonBuilder
 
                     string folderName = Path.GetFileName(folder);
 
-                    if (hasPrivateKey)
+                    if (HasPrivateKey)
                     {
-                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp="+ "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp=" + "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
                     }
                     else
                     {
@@ -287,8 +287,8 @@ namespace AddonBuilder
                         Hash[] hashes = hashesToChange.ToArray();
                         foreach (var hash in hashes)
                         {
-                            data["Checksums"].RemoveKey(hash.checksumName);
-                            data["Checksums"].AddKey(hash.checksumName, hash.hash);
+                            data["Checksums"].RemoveKey(hash.ChecksumName);
+                            data["Checksums"].AddKey(hash.ChecksumName, hash.FileHash);
                         }
                     }
                     parser.WriteFile("config.ini", data);
@@ -300,7 +300,7 @@ namespace AddonBuilder
                     {
                         try
                         {
-                           Console.WriteLine("Nothing built, opening Arma 3!");
+                            Console.WriteLine("Nothing built, opening Arma 3!");
                             Process Arma = new Process();
                             Arma.StartInfo.Arguments = openArmaArguments;
                             Arma.StartInfo.FileName = ArmaFolder + "\\" + ArmaExecutable;
@@ -368,13 +368,13 @@ namespace AddonBuilder
 
     public class Hash
     {
-        public string checksumName;
-        public string hash;
+        public string ChecksumName { get; set; }
+        public string FileHash { get; set; }
 
         public Hash(string checksumName, string hash)
         {
-            this.checksumName = checksumName;
-            this.hash = hash;
+            ChecksumName = checksumName;
+            FileHash = hash;
         }
     }
 }
