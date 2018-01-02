@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 
 namespace AddonBuilder
 {
@@ -16,10 +18,10 @@ namespace AddonBuilder
         static void Main(string[] args)
         {
             // Get version number
-            string version = Assembly.GetCallingAssembly().GetName().Version.ToString();
+            string version = "v" + Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine("Launching Addon Builder v" + version);
+            Console.WriteLine("Launching Addon Builder " + version);
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
@@ -28,6 +30,18 @@ namespace AddonBuilder
             {
                 ShowConsoleErrorMsg("Failed to find the config.ini file.");
                 Environment.Exit(1);
+            }
+
+            Console.WriteLine("Checking for updates...");
+            // Check for updates
+            if (NetworkInterface.GetIsNetworkAvailable())
+            {
+                //new Task(() => {  }).Start();
+                Classes.Updates.Updater.UpdateManager(version);
+            }
+            else
+            {
+                ShowConsoleErrorMsg("Failed to check for updates! No internet connection available!");
             }
 
             // Read our .ini info
@@ -376,11 +390,11 @@ namespace AddonBuilder
         /// Helper method that displays a given message in the console in red indicating an error.
         /// </summary>
         /// <param name="message">The message to display in the console</param>
-        static void ShowConsoleErrorMsg(string message)
+        public static void ShowConsoleErrorMsg(string message)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n {message}");
+            Console.WriteLine($"{message}");
             Console.ResetColor();
             Console.WriteLine("\nPress any key to continue.");
             Console.ReadKey();
