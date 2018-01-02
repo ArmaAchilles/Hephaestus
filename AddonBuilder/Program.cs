@@ -7,7 +7,6 @@ using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 
 namespace AddonBuilder
 {

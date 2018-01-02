@@ -11,7 +11,7 @@ namespace AddonBuilder.Classes.Updates
             {
                 bool isLatestVersion = CheckIfLatest.IsLatest(currentVersion, releaseVersion);
 
-                if (isLatestVersion)
+                if (isLatestVersion) // TODO: Don't forget to set back to !isLatestVersion!
                 {
                     Console.WriteLine("Update is available to Addon Builder!\nDo you wish to update (y/n)?");
                     ConsoleKeyInfo pressedKey = Console.ReadKey();
