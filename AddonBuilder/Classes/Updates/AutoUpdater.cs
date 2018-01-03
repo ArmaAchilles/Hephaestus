@@ -10,7 +10,6 @@ namespace AddonBuilder.Classes.Updates
     {
         public static void DoUpdate()
         {
-
         }
     }
 }

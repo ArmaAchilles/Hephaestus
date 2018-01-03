@@ -91,7 +91,8 @@ namespace AddonBuilder
             string privateKey = privateKeyDir + "\\" + privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
 
             // Handle the building of the addons
-            HandleBuild(AddonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix, openArma, openArmaArguments, ArmaFolder, ArmaExecutable);
+            HandleBuild(AddonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix, openArma, openArmaArguments,
+                ArmaFolder, ArmaExecutable);
 
             Console.WriteLine("Finished all tasks. Exiting!");
         }
@@ -104,11 +105,13 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key directory</param>
         /// <param name="ArmaFolder">Arma 3 folder</param>
         /// <param name="AddonBuilder">Addon Builder folder</param>
-        public static void HandleFolders(string source, string target, string privateKey, string ArmaFolder, string AddonBuilder, string projectPrefix)
+        public static void HandleFolders(string source, string target, string privateKey, string ArmaFolder,
+            string AddonBuilder, string projectPrefix)
         {
             if (!Directory.Exists(source))
             {
-                ShowConsoleErrorMsg($"The given source path does not exist or does not represent a valid path:\n {source}");
+                ShowConsoleErrorMsg(
+                    $"The given source path does not exist or does not represent a valid path:\n {source}");
                 Environment.Exit(1);
             }
 
@@ -131,13 +134,15 @@ namespace AddonBuilder
 
             if (!Directory.Exists(ArmaFolder))
             {
-                ShowConsoleErrorMsg($"The given path to the Arma 3 game directory does not exist or does not represent a valid path:\n {ArmaFolder}");
+                ShowConsoleErrorMsg(
+                    $"The given path to the Arma 3 game directory does not exist or does not represent a valid path:\n {ArmaFolder}");
                 Environment.Exit(1);
             }
 
             if (!Directory.Exists(AddonBuilder))
             {
-                ShowConsoleErrorMsg($"The given path to the Arma 3 Addon Builder does not exist or does not represent a valid path:\n {AddonBuilder}");
+                ShowConsoleErrorMsg(
+                    $"The given path to the Arma 3 Addon Builder does not exist or does not represent a valid path:\n {AddonBuilder}");
                 Environment.Exit(1);
             }
 
@@ -156,7 +161,8 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key folder</param>
         /// <param name="privateKeyPrefix">Private key prefix</param>
         /// <param name="privateKeyVersion">Private key version (default or one from the argument)</param>
-        public static void HandleFiles(string ArmaFolder, string AddonBuilder, string privateKey, string privateKeyPrefix, string privateKeyVersion)
+        public static void HandleFiles(string ArmaFolder, string AddonBuilder, string privateKey,
+            string privateKeyPrefix, string privateKeyVersion)
         {
             string privateKeyName = privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
             if (!File.Exists(privateKey + "\\" + privateKeyName))
@@ -170,13 +176,15 @@ namespace AddonBuilder
 
             if (!File.Exists(ArmaFolder + "\\" + "arma3_x64.exe") | !File.Exists(ArmaFolder + "\\" + "arma3.exe"))
             {
-                ShowConsoleErrorMsg($"The given Arma 3 game path does not contain any valid Arma 3 executables:\n {ArmaFolder}");
+                ShowConsoleErrorMsg(
+                    $"The given Arma 3 game path does not contain any valid Arma 3 executables:\n {ArmaFolder}");
                 Environment.Exit(1);
             }
 
             if (!File.Exists(AddonBuilder + "\\" + "AddonBuilder.exe"))
             {
-                ShowConsoleErrorMsg($"The given Addon Builder path does not contain a valid Addon Builder executable:\n {AddonBuilder}");
+                ShowConsoleErrorMsg(
+                    $"The given Addon Builder path does not contain a valid Addon Builder executable:\n {AddonBuilder}");
                 Environment.Exit(1);
             }
         }
@@ -203,6 +211,7 @@ namespace AddonBuilder
 
                         proc.WaitForExit();
                     }
+
                     proc.Close();
                 }
             }
@@ -224,7 +233,8 @@ namespace AddonBuilder
         /// <param name="openArmaArguments">Arguments to launch Arma with</param>
         /// <param name="ArmaFolder">Arma 3 Folder</param>
         /// <param name="ArmaExecutable">Executable of Arma to launch with</param>
-        public static void HandleBuild(string AddonBuilder, string source, string target, string privateKey, string projectPrefix, bool openArma, string openArmaArguments, string ArmaFolder, string ArmaExecutable)
+        public static void HandleBuild(string AddonBuilder, string source, string target, string privateKey,
+            string projectPrefix, bool openArma, string openArmaArguments, string ArmaFolder, string ArmaExecutable)
         {
             string[] folders = Directory.GetDirectories(source);
 
@@ -246,19 +256,28 @@ namespace AddonBuilder
 
                     if (HasPrivateKey)
                     {
-                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp=" + "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" +
+                                                      " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" +
+                                                      "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp=" +
+                                                      "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" +
+                                                      " -binarizeFullLogs";
                     }
                     else
                     {
-                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" + " -packonly -prefix=" + "\"" + projectPrefix + "\"" + "\\" + folderName + " -temp=" + "\"" + Path.GetTempPath() + "\\" + projectPrefix + "\"" + " -binarizeFullLogs";
+                        builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" +
+                                                      " -packonly -prefix=" + "\"" + projectPrefix + "\"" + "\\" +
+                                                      folderName + " -temp=" + "\"" + Path.GetTempPath() + "\\" +
+                                                      projectPrefix + "\"" + " -binarizeFullLogs";
                     }
+
                     builder.StartInfo.RedirectStandardOutput = true;
                     builder.StartInfo.UseShellExecute = false;
                     builder.StartInfo.CreateNoWindow = true;
                     builder.StartInfo.FileName = AddonBuilder;
 
                     builder.EnableRaisingEvents = true;
-                    builder.Exited += (sender, e) => BuilderExit(sender, e, folderCount, openArmaArguments, ArmaFolder, ArmaExecutable, openArma);
+                    builder.Exited += (sender, e) => BuilderExit(sender, e, folderCount, openArmaArguments, ArmaFolder,
+                        ArmaExecutable, openArma);
 
                     string checksumName = projectPrefix.ToLower() + folderName.ToUpper();
                     string hash = HashHelper.HashDirectory("SHA1", new DirectoryInfo(folder));
@@ -311,6 +330,7 @@ namespace AddonBuilder
                             data["Checksums"].AddKey(hash.ChecksumName, hash.FileHash);
                         }
                     }
+
                     parser.WriteFile("config.ini", data);
                 }
 
@@ -357,7 +377,8 @@ namespace AddonBuilder
         /// <param name="ArmaFolder">Arma 3 Folder</param>
         /// <param name="ArmaExecutable">Arma 3 Executable to launch the game with</param>
         /// <param name="openArma">Should we open Arma?</param>
-        private static void BuilderExit(object sender, EventArgs e, int folderCount, string openArmaArguments, string ArmaFolder, string ArmaExecutable, bool openArma)
+        private static void BuilderExit(object sender, EventArgs e, int folderCount, string openArmaArguments,
+            string ArmaFolder, string ArmaExecutable, bool openArma)
         {
             closedBuilders++;
             if (closedBuilders + buildersNotLaunched == folderCount)
