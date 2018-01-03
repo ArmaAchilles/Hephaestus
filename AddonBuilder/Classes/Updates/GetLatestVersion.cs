@@ -1,5 +1,4 @@
-﻿using System;
-using RestSharp;
+﻿using RestSharp;
 using RestSharp.Deserializers;
 
 namespace AddonBuilder.Classes.Updates
