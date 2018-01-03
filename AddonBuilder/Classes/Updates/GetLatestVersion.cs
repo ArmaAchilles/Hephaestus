@@ -8,7 +8,7 @@ namespace AddonBuilder.Classes.Updates
     {
         class GitHubData
         {
-            public string tag_name { get; set; }
+            public string TagName { get; set; }
         }
 
         static string ReleaseVersion { get; set; } = "";
@@ -23,7 +23,7 @@ namespace AddonBuilder.Classes.Updates
             if (response.IsSuccessful)
             {
                 GitHubData data = new JsonDeserializer().Deserialize<GitHubData>(response);
-                ReleaseVersion = data.tag_name;
+                ReleaseVersion = data.TagName;
             }
             else
             {
