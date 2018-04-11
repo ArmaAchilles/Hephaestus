@@ -4,11 +4,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AddonBuilder")]
+[assembly: AssemblyTitle("Hephaestus")]
 [assembly: AssemblyDescription("Builds PBOs from folders of code for Arma 3.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ArmA 3 Achilles Mod Inc.")]
-[assembly: AssemblyProduct("AddonBuilder")]
+[assembly: AssemblyProduct("Hephaestus")]
 [assembly: AssemblyCopyright("Copyright ©  2017 ArmA 3 Achilles Mod Inc.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

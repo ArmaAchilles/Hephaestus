@@ -13,7 +13,7 @@ namespace AddonBuilder
 {
     public class Program
     {
-        private static readonly string ConfigFileName = "ABConfig.ini";
+        private static readonly string ConfigFileName = "Hephaestus.ini";
 
         private static bool hasPrivateKey = false;
 
@@ -23,7 +23,7 @@ namespace AddonBuilder
             string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine("Launching Addon Builder v" + appVersion);
+            Console.WriteLine("Launching Hephaestus v" + appVersion);
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
