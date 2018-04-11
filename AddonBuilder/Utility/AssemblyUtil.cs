@@ -10,25 +10,25 @@ namespace AddonBuilder.Utility
     {
         public static string GetTitle()
         {
-            var attr = GetAssemblyAttribute<AssemblyTitleAttribute>();
-            if (attr != null)
-                return attr.Title;
+            var attribute = GetAssemblyAttribute<AssemblyTitleAttribute>();
+            if (attribute != null)
+                return attribute.Title;
             return string.Empty;
         }
 
         public static string GetCompany()
         {
-            var attr = GetAssemblyAttribute<AssemblyCompanyAttribute>();
-            if (attr != null)
-                return attr.Company;
+            var attribute = GetAssemblyAttribute<AssemblyCompanyAttribute>();
+            if (attribute != null)
+                return attribute.Company;
             return string.Empty;
         }
 
         public static string GetCopyright()
         {
-            var attr = GetAssemblyAttribute<AssemblyCopyrightAttribute>();
-            if (attr != null)
-                return attr.Copyright;
+            var attribute = GetAssemblyAttribute<AssemblyCopyrightAttribute>();
+            if (attribute != null)
+                return attribute.Copyright;
             return string.Empty;
         }
 
