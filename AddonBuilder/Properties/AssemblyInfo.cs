@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Hephaestus")]
 [assembly: AssemblyDescription("Builds PBOs from folders of code for Arma 3.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ArmA 3 Achilles Mod Inc.")]
+[assembly: AssemblyCompany("Achilles")]
 [assembly: AssemblyProduct("Hephaestus")]
 [assembly: AssemblyCopyright("Copyright ©  2017 ArmA 3 Achilles Mod Inc.")]
 [assembly: AssemblyTrademark("")]

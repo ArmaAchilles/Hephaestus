@@ -24,7 +24,7 @@ namespace AddonBuilder
 
             // Show our info
             Console.WriteLine("Launching Hephaestus v" + appVersion);
-            Console.WriteLine("Made by CreepPork_LV");
+            Console.WriteLine("Made by Achilles");
             Console.WriteLine("========");
 
             // If config.ini was not found, display an error
