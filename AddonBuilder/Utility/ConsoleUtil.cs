@@ -2,7 +2,10 @@
 
 namespace AddonBuilder.Utility
 {
-    public class ConsoleUtil
+    /// <summary>
+    /// Utility class that facilitates the execution of various console based tasks.
+    /// </summary>
+    public static class ConsoleUtil
     {
         /// <summary>
         /// Helper method that displays a given message in the console in red indicating an error.

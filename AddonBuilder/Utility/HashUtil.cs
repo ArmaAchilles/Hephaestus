@@ -4,7 +4,7 @@ using System.IO;
 
 namespace AddonBuilder.Utility
 {
-    public class HashUtil
+    public static class HashUtil
     {
         /// <summary>
         ///  Recursively computes a hash of the specified directory.

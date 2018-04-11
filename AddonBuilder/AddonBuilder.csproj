@@ -78,6 +78,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utility\AssemblyUtil.cs" />
     <Compile Include="Utility\HashUtil.cs" />
     <Compile Include="Services\Updater\AutoUpdater.cs" />
     <Compile Include="Services\Updater\CheckIfLatest.cs" />
