@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
-using System.Reflection;
 using System.Collections.Generic;
 using AddonBuilder.Models;
 using AddonBuilder.Utility;
@@ -19,12 +18,9 @@ namespace AddonBuilder
 
         public static void Main(string[] args)
         {
-            // Get version number
-            string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
-
             // Show our info
-            Console.WriteLine("Launching Hephaestus v" + appVersion);
-            Console.WriteLine("Made by Achilles");
+            Console.WriteLine($"Launching {AssemblyUtil.GetTitle()} v {AssemblyUtil.GetVersion()}");
+            Console.WriteLine("Made by " + AssemblyUtil.GetCompany());
             Console.WriteLine("========");
 
             // If config.ini was not found, display an error
