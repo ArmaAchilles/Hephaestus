@@ -2,9 +2,9 @@
 using System.Security.Cryptography;
 using System.IO;
 
-namespace AddonBuilder
+namespace AddonBuilder.Utility
 {
-    class HashHelper
+    public class HashUtil
     {
         /// <summary>
         ///  Recursively computes a hash of the specified directory.
@@ -68,7 +68,7 @@ namespace AddonBuilder
                         {
                             // Write a flag that indicates this is a file,
                             // not a directory.
-                            binaryWriter.Write((byte) 'F');
+                            binaryWriter.Write((byte)'F');
 
                             // Instead of writing the contents of the file
                             // directly to cryptoStream, hash it and write
@@ -76,16 +76,16 @@ namespace AddonBuilder
                             // hash the length of the file separately and
                             // worry that the length might change while
                             // we're reading.
-                            binaryWriter.Write(HashFile(algorithmName, (FileInfo) info));
+                            binaryWriter.Write(HashFile(algorithmName, (FileInfo)info));
                         }
                         else
                         {
                             // Write a flag that indicates this is a directory,
                             // not a file.
-                            binaryWriter.Write((byte) 'D');
+                            binaryWriter.Write((byte)'D');
 
                             // Recursively hash the subdirectory.
-                            binaryWriter.Write(HashDirectory(algorithmName, (DirectoryInfo) info));
+                            binaryWriter.Write(HashDirectory(algorithmName, (DirectoryInfo)info));
                         }
                     }
                 }

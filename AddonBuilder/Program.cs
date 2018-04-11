@@ -6,62 +6,67 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using AddonBuilder.Models;
+using AddonBuilder.Utility;
 
 namespace AddonBuilder
 {
-    class Program
+    public class Program
     {
-        static bool HasPrivateKey { get; set; } = false;
+        private static readonly string ConfigFileName = "ABConfig.ini";
 
-        static void Main(string[] args)
+        private static bool hasPrivateKey = false;
+
+        public static void Main(string[] args)
         {
             // Get version number
-            string version = "v" + Assembly.GetCallingAssembly().GetName().Version.ToString();
+            string appVersion = Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             // Show our info
-            Console.WriteLine("Launching Addon Builder " + version);
+            Console.WriteLine("Launching Addon Builder v" + appVersion);
             Console.WriteLine("Made by CreepPork_LV");
             Console.WriteLine("========");
 
             // If config.ini was not found, display an error
-            if (!File.Exists("config.ini"))
+            if (!File.Exists(ConfigFileName))
             {
-                ShowConsoleErrorMsg("Failed to find the config.ini file.");
+                ConsoleUtil.ShowConsoleErrorMsg($"Failed to find {ConfigFileName}, please ensure it is in the same directory as the application.");
                 Environment.Exit(1);
             }
 
-            Console.WriteLine("Checking for updates...");
-            // Check for updates
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                //new Task(() => {  }).Start();
-                Classes.Updates.Updater.UpdateManager(version);
-            }
-            else
-            {
-                ShowConsoleErrorMsg("Failed to check for updates! No internet connection available!");
-            }
+            //TODO: Finish the updater
+
+            //Console.WriteLine("Checking for updates...");
+            //// Check for updates
+            //if (NetworkInterface.GetIsNetworkAvailable())
+            //{
+            //    //new Task(() => {  }).Start();
+            //    Classes.Updates.Updater.UpdateManager(appVersion);
+            //}
+            //else
+            //{
+            //    ShowConsoleErrorMsg("Failed to check for updates! No internet connection available!");
+            //}
 
             // Read our .ini info
-            var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile("config.ini");
+            var iniParser = new FileIniDataParser();
+            IniData iniData = iniParser.ReadFile(ConfigFileName);
 
-            string sourceDir = data["AddonFolders"]["sourceDir"];
-            string targetDir = data["AddonFolders"]["targetDir"];
+            string sourceDir = iniData["AddonFolders"]["sourceDir"];
+            string targetDir = iniData["AddonFolders"]["targetDir"];
 
-            string projectPrefix = data["AddonInformation"]["projectPrefix"];
+            string projectPrefix = iniData["AddonInformation"]["projectPrefix"];
 
-            string privateKeyDir = data["AddonSigning"]["privateKeyDir"];
-            string privateKeyPrefix = data["AddonSigning"]["privateKeyPrefix"];
-            string privateKeyVersion = data["AddonSigning"]["privateKeyVersionDefault"];
+            string privateKeyDir = iniData["AddonSigning"]["privateKeyDir"];
+            string privateKeyPrefix = iniData["AddonSigning"]["privateKeyPrefix"];
+            string privateKeyVersion = iniData["AddonSigning"]["privateKeyVersionDefault"];
 
-            string armaFolder = data["ArmaInformation"]["ArmaFolder"];
-            string addonBuilderDir = data["ArmaInformation"]["AddonBuilderDir"];
-            bool shutdownArma = bool.Parse(data["ArmaInformation"]["ShutdownArma"]);
-            bool openArma = bool.Parse(data["ArmaInformation"]["OpenArma"]);
-            string armaExecutable = data["ArmaInformation"]["OpenArmaExecutable"];
-            string openArmaArguments = data["ArmaInformation"]["OpenArmaArguments"];
+            string armaFolder = iniData["ArmaInformation"]["ArmaFolder"];
+            string addonBuilderDir = iniData["ArmaInformation"]["AddonBuilderDir"];
+            bool shutdownArma = bool.Parse(iniData["ArmaInformation"]["ShutdownArma"]);
+            bool openArma = bool.Parse(iniData["ArmaInformation"]["OpenArma"]);
+            string armaExecutable = iniData["ArmaInformation"]["OpenArmaExecutable"];
+            string armaLaunchArguments = iniData["ArmaInformation"]["OpenArmaArguments"];
 
             // Check if any arguments were passed (version number)
             if (args.Length > 0)
@@ -91,7 +96,7 @@ namespace AddonBuilder
             string privateKey = privateKeyDir + "\\" + privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
 
             // Handle the building of the addons
-            HandleBuild(addonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix, openArma, openArmaArguments,
+            HandleBuild(addonBuilderExe, sourceDir, targetDir, privateKey, projectPrefix, openArma, armaLaunchArguments,
                 armaFolder, armaExecutable);
 
             Console.WriteLine("Finished all tasks. Exiting!");
@@ -105,19 +110,19 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key directory</param>
         /// <param name="armaFolder">Arma 3 folder</param>
         /// <param name="addonBuilder">Addon Builder folder</param>
-        public static void HandleFolders(string source, string target, string privateKey, string armaFolder,
+        private static void HandleFolders(string source, string target, string privateKey, string armaFolder,
             string addonBuilder, string projectPrefix)
         {
             if (!Directory.Exists(source))
             {
-                ShowConsoleErrorMsg(
+                ConsoleUtil.ShowConsoleErrorMsg(
                     $"The given source path does not exist or does not represent a valid path:\n {source}");
                 Environment.Exit(1);
             }
 
             if (Directory.GetDirectories(source).Length == 0)
             {
-                ShowConsoleErrorMsg($"The given source path does not contain any buildable folders:\n {source}");
+                ConsoleUtil.ShowConsoleErrorMsg($"The given source path does not contain any buildable folders:\n {source}");
                 Environment.Exit(1);
             }
 
@@ -134,14 +139,14 @@ namespace AddonBuilder
 
             if (!Directory.Exists(armaFolder))
             {
-                ShowConsoleErrorMsg(
+                ConsoleUtil.ShowConsoleErrorMsg(
                     $"The given path to the Arma 3 game directory does not exist or does not represent a valid path:\n {armaFolder}");
                 Environment.Exit(1);
             }
 
             if (!Directory.Exists(addonBuilder))
             {
-                ShowConsoleErrorMsg(
+                ConsoleUtil.ShowConsoleErrorMsg(
                     $"The given path to the Arma 3 Addon Builder does not exist or does not represent a valid path:\n {addonBuilder}");
                 Environment.Exit(1);
             }
@@ -161,7 +166,7 @@ namespace AddonBuilder
         /// <param name="privateKey">Private key folder</param>
         /// <param name="privateKeyPrefix">Private key prefix</param>
         /// <param name="privateKeyVersion">Private key version (default or one from the argument)</param>
-        public static void HandleFiles(string armaFolder, string addonBuilder, string privateKey,
+        private static void HandleFiles(string armaFolder, string addonBuilder, string privateKey,
             string privateKeyPrefix, string privateKeyVersion)
         {
             string privateKeyName = privateKeyPrefix + "_" + privateKeyVersion + ".biprivatekey";
@@ -171,19 +176,19 @@ namespace AddonBuilder
             }
             else
             {
-                HasPrivateKey = true;
+                hasPrivateKey = true;
             }
 
             if (!File.Exists(armaFolder + "\\" + "arma3_x64.exe") | !File.Exists(armaFolder + "\\" + "arma3.exe"))
             {
-                ShowConsoleErrorMsg(
+                ConsoleUtil.ShowConsoleErrorMsg(
                     $"The given Arma 3 game path does not contain any valid Arma 3 executables:\n {armaFolder}");
                 Environment.Exit(1);
             }
 
             if (!File.Exists(addonBuilder + "\\" + "AddonBuilder.exe"))
             {
-                ShowConsoleErrorMsg(
+                ConsoleUtil.ShowConsoleErrorMsg(
                     $"The given Addon Builder path does not contain a valid Addon Builder executable:\n {addonBuilder}");
                 Environment.Exit(1);
             }
@@ -192,7 +197,7 @@ namespace AddonBuilder
         /// <summary>
         /// Handles the closing of Arma 3 if open
         /// </summary>
-        public static void HandleArmaClose()
+        private static void HandleArmaClose()
         {
             Process[] processes = Process.GetProcesses();
             string processName32 = "arma3";
@@ -233,7 +238,7 @@ namespace AddonBuilder
         /// <param name="openArmaArguments">Arguments to launch Arma with</param>
         /// <param name="armaFolder">Arma 3 Folder</param>
         /// <param name="armaExecutable">Executable of Arma to launch with</param>
-        public static void HandleBuild(string addonBuilder, string source, string target, string privateKey,
+        private static void HandleBuild(string addonBuilder, string source, string target, string privateKey,
             string projectPrefix, bool openArma, string openArmaArguments, string armaFolder, string armaExecutable)
         {
             string[] folders = Directory.GetDirectories(source);
@@ -241,7 +246,7 @@ namespace AddonBuilder
             int folderCount = folders.Length;
 
             var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile("config.ini");
+            IniData iniData = parser.ReadFile(ConfigFileName);
 
             int addedHashes = 0;
             List<Hash> hashesToChange = new List<Hash>();
@@ -254,7 +259,7 @@ namespace AddonBuilder
 
                     string folderName = Path.GetFileName(folder);
 
-                    if (HasPrivateKey)
+                    if (hasPrivateKey)
                     {
                         builder.StartInfo.Arguments = "\"" + folder + "\"" + " " + "\"" + target + "\"" +
                                                       " -packonly -sign=" + "\"" + privateKey + "\"" + " -prefix=" +
@@ -280,19 +285,19 @@ namespace AddonBuilder
                         armaExecutable, openArma);
 
                     string checksumName = projectPrefix.ToLower() + folderName.ToUpper();
-                    string hash = HashHelper.HashDirectory("SHA1", new DirectoryInfo(folder));
+                    string hash = HashUtil.HashDirectory("SHA1", new DirectoryInfo(folder));
 
-                    if (data["Checksums"][checksumName] == null)
+                    if (iniData["Checksums"][checksumName] == null)
                     {
                         Console.WriteLine("No checksum found for {0}! Generating hash and building!", folderName);
 
-                        data["Checksums"].AddKey(checksumName, hash);
+                        iniData["Checksums"].AddKey(checksumName, hash);
 
                         addedHashes++;
 
                         builder.Start();
                     }
-                    else if (data["Checksums"][checksumName] != hash)
+                    else if (iniData["Checksums"][checksumName] != hash)
                     {
                         Console.WriteLine("Hash mismatch for {0}! Building!", folderName);
 
@@ -326,12 +331,12 @@ namespace AddonBuilder
                         Hash[] hashes = hashesToChange.ToArray();
                         foreach (var hash in hashes)
                         {
-                            data["Checksums"].RemoveKey(hash.ChecksumName);
-                            data["Checksums"].AddKey(hash.ChecksumName, hash.FileHash);
+                            iniData["Checksums"].RemoveKey(hash.ChecksumName);
+                            iniData["Checksums"].AddKey(hash.ChecksumName, hash.FileHash);
                         }
                     }
 
-                    parser.WriteFile("config.ini", data);
+                    parser.WriteFile(ConfigFileName, iniData);
                 }
 
                 if (openArma)
@@ -404,32 +409,6 @@ namespace AddonBuilder
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Helper method that displays a given message in the console in red indicating an error.
-        /// </summary>
-        /// <param name="message">The message to display in the console</param>
-        public static void ShowConsoleErrorMsg(string message)
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"{message}");
-            Console.ResetColor();
-            Console.WriteLine("\nPress any key to continue.");
-            Console.ReadKey();
-        }
-    }
-
-    public class Hash
-    {
-        public string ChecksumName { get; set; }
-        public string FileHash { get; set; }
-
-        public Hash(string checksumName, string hash)
-        {
-            ChecksumName = checksumName;
-            FileHash = hash;
         }
     }
 }
