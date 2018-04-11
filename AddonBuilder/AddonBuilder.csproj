@@ -78,17 +78,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Hashing\HashHelper.cs" />
-    <Compile Include="Classes\Updates\AutoUpdater.cs" />
-    <Compile Include="Classes\Updates\CheckIfLatest.cs" />
-    <Compile Include="Classes\Updates\GetLatestVersion.cs" />
-    <Compile Include="Classes\Updates\Updater.cs" />
+    <Compile Include="Utility\AssemblyUtil.cs" />
+    <Compile Include="Utility\HashUtil.cs" />
+    <Compile Include="Services\Updater\AutoUpdater.cs" />
+    <Compile Include="Services\Updater\CheckIfLatest.cs" />
+    <Compile Include="Services\Updater\GetLatestVersion.cs" />
+    <Compile Include="Services\Updater\Updater.cs" />
+    <Compile Include="Models\Hash.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\ConsoleUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.ini">
+    <None Include="Hephaestus.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
@@ -109,6 +112,7 @@
     <Content Include="FodyWeavers.xml" />
     <Content Include="Resources\icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

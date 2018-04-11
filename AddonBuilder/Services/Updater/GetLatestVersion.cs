@@ -1,4 +1,5 @@
-﻿using RestSharp;
+﻿using AddonBuilder.Utility;
+using RestSharp;
 using RestSharp.Deserializers;
 
 namespace AddonBuilder.Classes.Updates
@@ -26,7 +27,7 @@ namespace AddonBuilder.Classes.Updates
             }
             else
             {
-                Program.ShowConsoleErrorMsg("Failed to fetch latest version of Addon Builder!");
+                ConsoleUtil.ShowConsoleErrorMsg("Failed to fetch latest version of Addon Builder!");
             }
 
             return ReleaseVersion;
