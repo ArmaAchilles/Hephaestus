@@ -2,10 +2,10 @@
 Builds PBOs from folders using Bohemia Interactive's Addon Builder.
 
 ## Setup
-To download Addon Builder go to the [releases tab](https://github.com/ArmaAchilles/AddonBuilder/releases) and download the .rar file.
+To download Hephaestus go to the [releases tab](https://github.com/ArmaAchilles/AddonBuilder/releases) and download the .rar file.
 
 1. Unzip the files and store them out of any tracked Git folders.
-2. Configure Addon Builder in the supplied **config.ini** file.
+2. Configure Hephaestus in the supplied **Hephaestus.ini** file.
 3. Build as many PBOs as you need!
 
 ## Features
@@ -19,6 +19,6 @@ To download Addon Builder go to the [releases tab](https://github.com/ArmaAchill
 - Builds PBOs, what did you expect?
 
 ## Credits
-- CreepPork_LV
+- [CreepPork_LV](https://github.com/CreepPork) the originator of Hephaestus
 - [ranta](https://social.msdn.microsoft.com/profile/ranta/?ws=usercard-mini) for hashing methods
-- [MaliceGFS](https://github.com/MaliceGFS) for QoL improvements
+- [MaliceGFS](https://github.com/MaliceGFS) for QoL improvements and various refactorings
