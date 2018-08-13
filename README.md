@@ -1,4 +1,4 @@
-# AddonBuilder
+# Hephaestus
 Builds PBOs from folders using Bohemia Interactive's Addon Builder.
 
 ## Setup
