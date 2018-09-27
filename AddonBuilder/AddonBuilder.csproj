@@ -80,10 +80,6 @@
   <ItemGroup>
     <Compile Include="Utility\AssemblyUtil.cs" />
     <Compile Include="Utility\HashUtil.cs" />
-    <Compile Include="Services\Updater\AutoUpdater.cs" />
-    <Compile Include="Services\Updater\CheckIfLatest.cs" />
-    <Compile Include="Services\Updater\GetLatestVersion.cs" />
-    <Compile Include="Services\Updater\Updater.cs" />
     <Compile Include="Models\Hash.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -29,21 +29,7 @@ namespace AddonBuilder
                 ConsoleUtil.ShowConsoleErrorMsg($"Failed to find {ConfigFileName}, please ensure it is in the same directory as the application.");
                 Environment.Exit(1);
             }
-
-            //TODO: Finish the updater
-
-            //Console.WriteLine("Checking for updates...");
-            //// Check for updates
-            //if (NetworkInterface.GetIsNetworkAvailable())
-            //{
-            //    //new Task(() => {  }).Start();
-            //    Classes.Updates.Updater.UpdateManager(appVersion);
-            //}
-            //else
-            //{
-            //    ShowConsoleErrorMsg("Failed to check for updates! No internet connection available!");
-            //}
-
+            
             // Read our .ini info
             var iniParser = new FileIniDataParser();
             IniData iniData = iniParser.ReadFile(ConfigFileName);
