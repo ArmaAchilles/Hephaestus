@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hephaestus", "AddonBuilder\Hephaestus.csproj", "{9116D28C-8A32-4DBB-B773-EB4D2ADB3B4F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HephaestusConfigurator", "HephaestusConfigurator\HephaestusConfigurator.csproj", "{25452612-5037-4477-81C5-A350CCF29813}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HephaestusConfigurator", "HephaestusConfigurator\HephaestusConfigurator.csproj", "{6F63C674-A4AC-4F8A-B9C9-6CD64A3B0218}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{9116D28C-8A32-4DBB-B773-EB4D2ADB3B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9116D28C-8A32-4DBB-B773-EB4D2ADB3B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9116D28C-8A32-4DBB-B773-EB4D2ADB3B4F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{25452612-5037-4477-81C5-A350CCF29813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{25452612-5037-4477-81C5-A350CCF29813}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{25452612-5037-4477-81C5-A350CCF29813}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{25452612-5037-4477-81C5-A350CCF29813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F63C674-A4AC-4F8A-B9C9-6CD64A3B0218}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F63C674-A4AC-4F8A-B9C9-6CD64A3B0218}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F63C674-A4AC-4F8A-B9C9-6CD64A3B0218}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F63C674-A4AC-4F8A-B9C9-6CD64A3B0218}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
