@@ -4,7 +4,6 @@
   <Costura>
     <IncludeAssemblies>
       INIFileParser
-      RestSharp
     </IncludeAssemblies>
   </Costura>
 </Weavers>
