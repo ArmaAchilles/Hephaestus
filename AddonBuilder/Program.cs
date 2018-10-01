@@ -18,7 +18,7 @@ namespace AddonBuilder
 
         public static void Main(string[] args)
         {
-            // Show our info
+            Console.Title = AssemblyUtil.GetTitle() + " " + AssemblyUtil.GetVersion();
             Console.WriteLine($"Launching {AssemblyUtil.GetTitle()} v {AssemblyUtil.GetVersion()}");
             Console.WriteLine("Made by " + AssemblyUtil.GetCompany());
             Console.WriteLine("========");
