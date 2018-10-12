@@ -43,10 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Settings\MasterSetting.cs" />
-    <Compile Include="Classes\Settings\ProjectSetting.cs" />
+    <Compile Include="Classes\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\JsonUtility.cs" />
+    <Compile Include="Utilities\ProjectUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
