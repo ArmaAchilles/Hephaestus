@@ -1,44 +1,40 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.IO;
+using System.Reflection;
+using HephaestusCommon.Utilities;
+using Hephaestus.Utilities;
+using HephaestusCommon.Classes;
 
 namespace Hephaestus
 {
     public class Program
     {
-        public static void Main()
+        public static void Main(string[] arguments)
         {
-            HandleJson();
+            string path = Environment.CurrentDirectory;
 
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey();
+            Project project;
+
+            // Handle any passed commands (arguments)
+            ArgumentUtility.Handle(arguments);
+
+            // Get the project data (if exists)
+            if (ProjectUtility.ProjectExists(path))
+            {
+                project = ProjectUtility.GetProject(path);
+            }
+            else
+            {
+                project = null;
+
+                Console.Error.WriteLine("Project configuration file does not exist. Run 'hephaestus init' to create one.");
+
+                Environment.Exit(2);
+            }
+
+            int exitCode = BuilderUtility.Build(project);
+
+            Environment.Exit(exitCode);
         }
-
-        public static void HandleJson()
-        {
-            ReadJson();
-        }
-
-        public static void ReadJson()
-        {
-
-        }
-
-        // Read the JSON
-
-        // If default then open Hephaestus Configurator
-
-        // Check if all entries in JSON are true
-
-        // Get all the PBOs
-
-        // Check if they were previously built
-
-        // Close Arma 3 (if set so)
-
-        // Build changed PBOs
-
-        // Launch Arma 3
-
-        // Exit
     }
 }

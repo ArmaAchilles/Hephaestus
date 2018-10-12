@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using HephaestusConfigurator.Utilities;
+using HephaestusCommon.Utilities;
 
 namespace HephaestusConfigurator
 {
@@ -41,7 +42,7 @@ namespace HephaestusConfigurator
 
         private void button_addonBuilderFile_Click(object sender, RoutedEventArgs e)
         {
-            string defaultAddonBuilderPath = ReadRegistryKey("SOFTWARE\\WOW6432Node\\Bohemia Interactive\\addonbuilder", "path");
+            string defaultAddonBuilderPath = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\addonbuilder", "path");
 
             textBox_addonBuilderFile.Text = Dialogs.OpenFileDialogToSelectFile(defaultAddonBuilderPath, "AddonBuilder.exe", "Addon Builder|AddonBuilder.exe");
         }
@@ -58,7 +59,7 @@ namespace HephaestusConfigurator
 
         private void button_gameExecutable_Click(object sender, RoutedEventArgs e)
         {
-            string defaultArma3Path = ReadRegistryKey("SOFTWARE\\WOW6432Node\\Bohemia Interactive\\arma 3", "main");
+            string defaultArma3Path = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\arma 3", "main");
 
             textBox_gameExecutable.Text = Dialogs.OpenFileDialogToSelectFile(defaultArma3Path);
         }
@@ -72,30 +73,6 @@ namespace HephaestusConfigurator
                 comboBox_projectDirectory.Items.Insert(comboBox_projectDirectory.Items.Count - 1, new ComboBoxItem { Content = path });
                 comboBox_projectDirectory.SelectedIndex = indexToInsert;
             }
-        }
-
-        public string ReadRegistryKey(string keyPath, string subKeyName)
-        {
-            string value = "";
-
-            try
-            {
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath))
-                {
-                    if (key != null)
-                    {
-                        Object subKeyObject = key.GetValue(subKeyName);
-
-                        if (subKeyObject != null)
-                        {
-                            value = subKeyObject as String;
-                        }
-                    }
-                }
-            }
-            catch (Exception) { }
-
-            return value;
         }
     }
 }

@@ -7,12 +7,26 @@ namespace HephaestusCommon.Utilities
 {
     public class ProjectUtility
     {
-        private string GetJsonPath(string path)
+        private static string GetJsonPath(string path)
         {
-            return String.Format("{0}\\.hephaestus.json", path);
+            return String.Format(@"{0}\.hephaestus.json", path);
         }
 
-        public Project GetProject(string path)
+        public static bool ProjectExists(string path)
+        {
+            string jsonPath = GetJsonPath(path);
+
+            if (File.Exists(jsonPath))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static Project GetProject(string path)
         {
             Project project;
 
@@ -30,7 +44,7 @@ namespace HephaestusCommon.Utilities
             return project;
         }
 
-        public void SetProject(string path, Project project)
+        public static void SetProject(string path, Project project)
         {
             string jsonPath = GetJsonPath(path);
 

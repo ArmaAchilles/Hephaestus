@@ -46,6 +46,7 @@
     <Compile Include="Classes\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ProjectUtility.cs" />
+    <Compile Include="Utilities\RegistryUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
