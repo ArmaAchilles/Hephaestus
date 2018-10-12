@@ -4,6 +4,41 @@ namespace HephaestusCommon.Classes
 {
     public class Project
     {
+        public Project(string projectDirectory, string sourceDirectory, string targetDirectory,
+            string addonBuilderFile, string projectPrefix, string privateKeyFile,
+            string gameExecutable, string gameExecutableArguments, bool shutdownGameBeforeBuilding,
+            bool startGameAfterBuilding, Dictionary<string, string> checksums)
+        {
+            ProjectDirectory = projectDirectory;
+            SourceDirectory = sourceDirectory;
+            TargetDirectory = targetDirectory;
+            AddonBuilderFile = addonBuilderFile;
+            ProjectPrefix = projectPrefix;
+            PrivateKeyFile = privateKeyFile;
+            GameExecutable = gameExecutable;
+            GameExecutableArguments = gameExecutableArguments;
+            ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
+            StartGameAfterBuilding = startGameAfterBuilding;
+            Checksums = checksums;
+        }
+
+        public Project(string projectDirectory, string sourceDirectory, string targetDirectory,
+            string addonBuilderFile, string projectPrefix, string privateKeyFile,
+            string gameExecutable, string gameExecutableArguments, bool shutdownGameBeforeBuilding,
+            bool startGameAfterBuilding)
+        {
+            ProjectDirectory = projectDirectory;
+            SourceDirectory = sourceDirectory;
+            TargetDirectory = targetDirectory;
+            AddonBuilderFile = addonBuilderFile;
+            ProjectPrefix = projectPrefix;
+            PrivateKeyFile = privateKeyFile;
+            GameExecutable = gameExecutable;
+            GameExecutableArguments = gameExecutableArguments;
+            ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
+            StartGameAfterBuilding = startGameAfterBuilding;
+        }
+
         public string ProjectDirectory { get; set; }
 
         public string SourceDirectory { get; set; }
@@ -22,6 +57,6 @@ namespace HephaestusCommon.Classes
         public bool StartGameAfterBuilding { get; set; }
 
         // Folder name, checksum
-        Dictionary<string, string> Checksums { get; set; }
+        public Dictionary<string, string> Checksums { get; set; }
     }
 }

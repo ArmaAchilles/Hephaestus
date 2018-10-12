@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using HephaestusConfigurator.Utilities;
 using HephaestusCommon.Utilities;
+using HephaestusCommon.Classes;
 
 namespace HephaestusConfigurator
 {
@@ -62,6 +63,27 @@ namespace HephaestusConfigurator
             string defaultArma3Path = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\arma 3", "main");
 
             textBox_gameExecutable.Text = Dialogs.OpenFileDialogToSelectFile(defaultArma3Path);
+        }
+
+        private void button_saveSettings_Click(object sender, RoutedEventArgs e)
+        {
+            string path = comboBox_projectDirectory.Text;
+
+            Project project = new Project(
+                path,
+                textBox_sourceDirectory.Text,
+                textBox_targetDirectory.Text,
+                textBox_addonBuilderFile.Text,
+                textBox_projectPrefix.Text,
+                textBox_privateKeyFile.Text,
+                textBox_gameExecutable.Text,
+                textBox_gameExecutableArguments.Text,
+                checkbox_shutdownGameBeforeBuilding.IsChecked ?? false,
+                checkbox_startGameAfterBuilding.IsChecked ?? false);
+
+            ProjectUtility.SetProject(path, project);
+
+            MessageBox.Show("Hephaestus Project Saved!", "Hephaestus Configurator", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void AddProjectDirectoryToComboBox(string path)
