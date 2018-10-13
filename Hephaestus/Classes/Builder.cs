@@ -81,7 +81,7 @@ namespace Hephaestus.Classes
                     double timeToBuild = Math.Round((exitTime - startTime).TotalSeconds, 3);
                     
                     Console.WriteLine(
-                        $"Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}" 
+                        $"Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
                             + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
                 }
                 else
