@@ -28,8 +28,10 @@ namespace Hephaestus.Classes
                         FileName = project.AddonBuilderFile,
 
                         Arguments =
-                            $@"""{sourceCodeDirectory}"" ""{project.TargetDirectory}"" -prefix=""{project.ProjectPrefix}"" -sign=""{project.PrivateKeyFile}""
-                                " + $@" -temp=""{Path.GetTempPath()}\{project.ProjectPrefix}"" -binarizeFullLogs"
+                            $@"""{sourceCodeDirectory}"" ""{project.TargetDirectory}"" " +
+                                $@"-prefix=""{project.ProjectPrefix}\{Path.GetFileName(sourceCodeDirectory)}"" -sign=""{project.PrivateKeyFile}"" " +
+                                $@"-temp=""{Path.GetTempPath()}\{project.ProjectPrefix}"" " +
+                                $@"-include=""{AppDomain.CurrentDomain.BaseDirectory}\Hephaestus.AddonBuilderIncludes.txt"" -binarizeFullLogs"
                     },
 
                     EnableRaisingEvents = true
