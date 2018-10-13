@@ -55,7 +55,7 @@ namespace HephaestusConfigurator
 
         private void button_privateKeyFileCreateNew_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            // TODO: Add support to create a new private key
         }
 
         private void button_gameExecutable_Click(object sender, RoutedEventArgs e)
@@ -88,13 +88,12 @@ namespace HephaestusConfigurator
 
         private void AddProjectDirectoryToComboBox(string path)
         {
-            if (path.Length > 0)
-            {
-                int indexToInsert = comboBox_projectDirectory.Items.Count - 1;
+            if (path.Length <= 0) return;
+            
+            int indexToInsert = comboBox_projectDirectory.Items.Count - 1;
 
-                comboBox_projectDirectory.Items.Insert(comboBox_projectDirectory.Items.Count - 1, new ComboBoxItem { Content = path });
-                comboBox_projectDirectory.SelectedIndex = indexToInsert;
-            }
+            comboBox_projectDirectory.Items.Insert(comboBox_projectDirectory.Items.Count - 1, new ComboBoxItem { Content = path });
+            comboBox_projectDirectory.SelectedIndex = indexToInsert;
         }
     }
 }

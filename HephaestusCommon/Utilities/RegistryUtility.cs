@@ -3,7 +3,7 @@ using System;
 
 namespace HephaestusCommon.Utilities
 {
-    public class RegistryUtility
+    public static class RegistryUtility
     {
         public static string GetKey(string keyPath, string subKeyName)
         {
@@ -13,20 +13,16 @@ namespace HephaestusCommon.Utilities
             {
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath))
                 {
-                    if (key != null)
-                    {
-                        Object subKeyObject = key.GetValue(subKeyName);
+                    object subKeyObject = key?.GetValue(subKeyName);
 
-                        if (subKeyObject != null)
-                        {
-                            value = subKeyObject as String;
-                        }
+                    if (subKeyObject != null)
+                    {
+                        value = subKeyObject as string;
                     }
                 }
             }
             catch (Exception)
             {
-                return null;
             }
 
             return value;

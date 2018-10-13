@@ -9,14 +9,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Achilles")]
 [assembly: AssemblyProduct("Hephaestus")]
-[assembly: AssemblyCopyright("Copyright ©  2017 ArmA 3 Achilles Mod Inc.")]
+[assembly: AssemblyCopyright("Copyright ©  2018 ArmaAchilles")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("9116d28c-8a32-4dbb-b773-eb4d2adb3b4f")]

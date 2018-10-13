@@ -1,45 +1,32 @@
 ﻿using System;
 using System.IO;
 using HephaestusCommon.Classes;
+using HephaestusCommon.Classes.Exceptions;
 using Newtonsoft.Json;
 
 namespace HephaestusCommon.Utilities
 {
-    public class ProjectUtility
+    public static class ProjectUtility
     {
         private static string GetJsonPath(string path)
         {
-            return String.Format(@"{0}\.hephaestus.json", path);
+            return $@"{path}\.hephaestus.json";
         }
 
         public static bool ProjectExists(string path)
         {
             string jsonPath = GetJsonPath(path);
 
-            if (File.Exists(jsonPath))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return File.Exists(jsonPath);
         }
 
         public static Project GetProject(string path)
         {
-            Project project;
-
             string jsonPath = GetJsonPath(path);
 
-            if (File.Exists(jsonPath))
-            {
-                project = JsonConvert.DeserializeObject<Project>(File.ReadAllText(jsonPath));
-            }
-            else
-            {
-                project = null;
-            }
+            Project project = File.Exists(jsonPath)
+                ? JsonConvert.DeserializeObject<Project>(File.ReadAllText(jsonPath))
+                : throw new ProjectDoesNotExistException();
 
             return project;
         }
@@ -47,10 +34,17 @@ namespace HephaestusCommon.Utilities
         public static void SetProject(string path, Project project)
         {
             string jsonPath = GetJsonPath(path);
-
+            
             string json = JsonConvert.SerializeObject(project, Formatting.Indented);
 
-            File.WriteAllText(jsonPath, json);
+            try
+            {
+                File.WriteAllText(jsonPath, json);
+            }
+            catch (Exception e)
+            {
+                throw new ProjectFailedToSaveException(e.Message);
+            }
         }
     }
 }

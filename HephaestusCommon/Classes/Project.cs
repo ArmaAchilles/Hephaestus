@@ -4,22 +4,9 @@ namespace HephaestusCommon.Classes
 {
     public class Project
     {
-        public Project(string projectDirectory, string sourceDirectory, string targetDirectory,
-            string addonBuilderFile, string projectPrefix, string privateKeyFile,
-            string gameExecutable, string gameExecutableArguments, bool shutdownGameBeforeBuilding,
-            bool startGameAfterBuilding, Dictionary<string, string> checksums)
+        // ReSharper disable once UnusedMember.Global | Required for JSON to work
+        public Project()
         {
-            ProjectDirectory = projectDirectory;
-            SourceDirectory = sourceDirectory;
-            TargetDirectory = targetDirectory;
-            AddonBuilderFile = addonBuilderFile;
-            ProjectPrefix = projectPrefix;
-            PrivateKeyFile = privateKeyFile;
-            GameExecutable = gameExecutable;
-            GameExecutableArguments = gameExecutableArguments;
-            ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
-            StartGameAfterBuilding = startGameAfterBuilding;
-            Checksums = checksums;
         }
 
         public Project(string projectDirectory, string sourceDirectory, string targetDirectory,

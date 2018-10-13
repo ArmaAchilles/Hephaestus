@@ -1,38 +1,33 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using HephaestusCommon.Utilities;
 using Hephaestus.Utilities;
 using HephaestusCommon.Classes;
+using Hephaestus.Classes;
+using HephaestusCommon.Classes.Exceptions;
 
 namespace Hephaestus
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] arguments)
         {
             string path = Environment.CurrentDirectory;
 
-            Project project;
-
             // Handle any passed commands (arguments)
             ArgumentUtility.Handle(arguments);
 
             // Get the project data (if exists)
-            if (ProjectUtility.ProjectExists(path))
+            Project project;
+            try
             {
                 project = ProjectUtility.GetProject(path);
             }
-            else
+            catch (ProjectDoesNotExistException)
             {
-                project = null;
-
-                Console.Error.WriteLine("Project configuration file does not exist. Run 'hephaestus init' to create one.");
-
-                Environment.Exit(2);
+                throw new ProjectDoesNotExistException("Project configuration file does not exist. Run 'hephaestus init' to create one.");
             }
 
-            int exitCode = BuilderUtility.Build(project);
+            int exitCode = Builder.Build(project);
 
             Environment.Exit(exitCode);
         }

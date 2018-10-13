@@ -1,11 +1,8 @@
 ﻿using HephaestusCommon.Classes;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Hephaestus.Classes.Exceptions;
 
 namespace Hephaestus.Classes
 {
@@ -15,34 +12,37 @@ namespace Hephaestus.Classes
 
         public AddonBuilder(string sourceCodeDirectory, Project project)
         {
-            Process process = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo
+                Process process = new Process
                 {
-                    RedirectStandardError = true,
-                    RedirectStandardOutput = false,
+                    StartInfo = new ProcessStartInfo
+                    {
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = false,
 
-                    UseShellExecute = false,
+                        UseShellExecute = false,
 
-                    CreateNoWindow = true,
+                        CreateNoWindow = true,
 
-                    FileName = project.AddonBuilderFile,
+                        FileName = project.AddonBuilderFile,
 
-                    Arguments = String.Format(@"""{0}"" ""{1}"" -prefix=""{2}"" -sign=""{3}"" -temp=""{4}\{5}"" -binarizeFullLogs",
-                    sourceCodeDirectory,
-                    project.TargetDirectory,
-                    project.ProjectPrefix,
-                    project.PrivateKeyFile,
-                    Path.GetTempPath(),
-                    project.ProjectPrefix)
-                },
+                        Arguments =
+                            $@"""{sourceCodeDirectory}"" ""{project.TargetDirectory}"" -prefix=""{project.ProjectPrefix}"" -sign=""{project.PrivateKeyFile}""
+                                " + $@" -temp=""{Path.GetTempPath()}\{project.ProjectPrefix}"" -binarizeFullLogs"
+                    },
 
-                EnableRaisingEvents = true
-            };
+                    EnableRaisingEvents = true
+                };
 
-            process.Start();
+                process.Start();
 
-            Process = process;
+                Process = process;
+            }
+            catch (Exception e)
+            {
+                throw new AddonBuilderFailedToStartException(e.Message);
+            }
         }
     }
 }
