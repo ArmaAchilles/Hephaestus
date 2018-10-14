@@ -91,6 +91,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />
     <Compile Include="Utilities\AssemblyUtility.cs" />
+    <Compile Include="Utilities\ConsoleUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
