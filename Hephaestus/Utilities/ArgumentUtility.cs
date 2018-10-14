@@ -72,13 +72,13 @@ namespace Hephaestus.Utilities
             // Launch Hephaestus Configurator
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
-                Arguments = Environment.CurrentDirectory,
+                Arguments = path,
                 // TODO: Create key in HephaestusInstaller
                 FileName = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\ArmaAchilles\Hephaestus\HephaestusConfigurator", "Path")
             };
 
             Process.Start(processStartInfo);
-
+            
             Environment.Exit(0);
         }
 

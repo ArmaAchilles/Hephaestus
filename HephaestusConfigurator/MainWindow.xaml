@@ -43,7 +43,7 @@
             </Grid.RowDefinitions>
 
             <Label Content="Project Directory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="98"/>
-            <ComboBox IsEditable="true" x:Name="ComboBoxProjectDirectory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Margin="10,36,0,0" KeyUp="ComboBoxProjectDirectory_OnKeyUp" LostFocus="ComboBoxProjectDirectory_OnLostFocus" SelectionChanged="comboBox_projectDirectory_SelectionChanged">
+            <ComboBox IsEditable="true" Loaded="ComboBoxProjectDirectory_OnLoaded" x:Name="ComboBoxProjectDirectory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Margin="10,36,0,0" KeyUp="ComboBoxProjectDirectory_OnKeyUp" LostFocus="ComboBoxProjectDirectory_OnLostFocus" SelectionChanged="comboBox_projectDirectory_SelectionChanged">
                 <ComboBoxItem Name="ComboBoxProjectDirectoryAddNew">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Add new project..."></TextBlock>

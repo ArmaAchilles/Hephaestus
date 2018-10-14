@@ -6,6 +6,7 @@ using Microsoft.Win32;
 using HephaestusConfigurator.Utilities;
 using HephaestusCommon.Utilities;
 using HephaestusCommon.Classes;
+using Microsoft.WindowsAPICodePack.Shell.Interop;
 
 namespace HephaestusConfigurator
 {
@@ -129,6 +130,19 @@ namespace HephaestusConfigurator
             TextBoxGameExecutableArguments.Text = project.GameExecutableArguments;
             CheckboxShutdownGameBeforeBuilding.IsChecked = project.ShutdownGameBeforeBuilding;
             CheckboxStartGameAfterBuilding.IsChecked = project.StartGameAfterBuilding;
+        }
+
+        private void ComboBoxProjectDirectory_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            string[] arguments = Environment.GetCommandLineArgs();
+
+            if (arguments.Length <= 0) return;
+
+            if (! Directory.Exists(arguments[1])) return;
+            
+            ComboBoxProjectDirectory.Text = arguments[1];
+                
+            LoadAllFields();
         }
     }
 }
