@@ -41,9 +41,6 @@
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net462\ControlzEx.dll</HintPath>
     </Reference>
-    <Reference Include="HephaestusCommon">
-      <HintPath>..\HephaestusCommon\bin\Debug\HephaestusCommon.dll</HintPath>
-    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net46\MahApps.Metro.dll</HintPath>
     </Reference>
@@ -128,6 +125,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\AchillesLogo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HephaestusCommon\HephaestusCommon.csproj">
+      <Project>{ffcfe2db-a143-4914-bd83-77059294eece}</Project>
+      <Name>HephaestusCommon</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
