@@ -73,9 +73,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\AddonBuilder.cs" />
     <Compile Include="Classes\Builder.cs" />
-    <Compile Include="Classes\Exceptions\AddonBuilderFailedToBuildException.cs" />
+    <Compile Include="Classes\Builders\AddonBuilder.cs" />
+    <Compile Include="Classes\Builders\Armake.cs" />
+    <Compile Include="Classes\Exceptions\BuilderFailedToBuildException.cs" />
     <Compile Include="Classes\Exceptions\ExceptionBase.cs" />
     <Compile Include="Classes\Game.cs" />
     <Compile Include="Program.cs" />

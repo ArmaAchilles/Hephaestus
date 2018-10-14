@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using Hephaestus.Classes.Exceptions;
 
 namespace Hephaestus.Classes
@@ -11,11 +12,13 @@ namespace Hephaestus.Classes
         {
             try
             {
+                Console.WriteLine($"info: Starting {Path.GetFileName(gameExecutable)}");
+                
                 Process.Start(new ProcessStartInfo(gameExecutable, gameExecutableArguments));
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Failed to start {gameExecutable} because {e.Message}");
+                Console.Error.WriteLine($"error: Failed to start {gameExecutable} because {e.Message}");
             }
         }
 
@@ -29,7 +32,7 @@ namespace Hephaestus.Classes
 
                 if (! processesToShutdown.Contains(processName)) continue;
                 
-                Console.WriteLine($"Found {processName}. Terminating process...");
+                Console.WriteLine($"info: Found {processName}. Terminating process...");
 
                 try
                 {
@@ -44,7 +47,7 @@ namespace Hephaestus.Classes
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine($"Failed to shutdown {process} because {e.Message}");
+                    Console.Error.WriteLine($"error: Failed to shutdown {process} because {e.Message}");
                 }
             }
         }

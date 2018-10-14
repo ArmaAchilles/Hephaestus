@@ -43,6 +43,8 @@ namespace HephaestusCommon.Classes
 
         public bool ShutdownGameBeforeBuilding { get; set; }
         public bool StartGameAfterBuilding { get; set; }
+        
+        public bool UseArmake { get; set; }
 
         // Directory name, SHA1
         public Dictionary<string, Hash> Hashes { get; set; }

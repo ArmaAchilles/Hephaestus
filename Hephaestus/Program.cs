@@ -9,6 +9,8 @@ namespace Hephaestus
 {
     public static class Program
     {
+        public static bool ForceBuild { private get; set; }
+        
         public static void Main(string[] arguments)
         {
             string path = Environment.CurrentDirectory;
@@ -27,7 +29,7 @@ namespace Hephaestus
                 throw new ProjectDoesNotExistException("Project configuration file does not exist. Run 'hephaestus init' to create one.");
             }
 
-            int exitCode = Builder.Build(project, null);
+            int exitCode = Builder.Build(project, ForceBuild);
 
             Environment.Exit(exitCode);
         }

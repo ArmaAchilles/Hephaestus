@@ -25,6 +25,10 @@ namespace Hephaestus.Utilities
                     InitCommand();
                     break;
                 
+                case "force":
+                    Program.ForceBuild = true;
+                    break;
+                
                 case "version":
                 case "-v":
                 case "--version":

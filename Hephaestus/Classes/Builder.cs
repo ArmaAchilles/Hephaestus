@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Hephaestus.Classes.Builders;
 using Hephaestus.Classes.Exceptions;
 using Hephaestus.Utilities;
 using HephaestusCommon.Classes;
@@ -18,7 +19,7 @@ namespace Hephaestus.Classes
         private static int ExitedAddonBuilders { get; set; }
         private static int NotBuiltDirectories { get; set; }
 
-        public static int Build(Project project, bool? forceBuild)
+        public static int Build(Project project, bool forceBuild)
         {
             while (true)
             {
@@ -29,6 +30,9 @@ namespace Hephaestus.Classes
                 LaunchedAddonBuilders = 0;
                 ExitedAddonBuilders = 0;
                 NotBuiltDirectories = 0;
+                
+                if (forceBuild)
+                    Console.WriteLine("Rebuilding...");
 
                 if (project.ShutdownGameBeforeBuilding)
                 {
@@ -38,7 +42,7 @@ namespace Hephaestus.Classes
                 string[] sourceCodeDirectories = GetSourceCodeDirectories(project.SourceDirectory);
                 SourceCodeDirectoryCount = sourceCodeDirectories.Length;
 
-                Console.WriteLine($"Found {SourceCodeDirectoryCount} source code directories");
+                Console.WriteLine($"info: Found {SourceCodeDirectoryCount} source code directories");
 
                 if (project.Hashes == null)
                 {
@@ -49,7 +53,7 @@ namespace Hephaestus.Classes
                 {
                     Hash hash = new Hash(sourceCodeDirectory);
 
-                    if (forceBuild == true)
+                    if (forceBuild)
                     {
                         BuildDirectory(sourceCodeDirectory, project);
                     }
@@ -62,7 +66,7 @@ namespace Hephaestus.Classes
                             if (selectedHash.SHA1 == hash.SHA1)
                             {
                                 NotBuiltDirectories++;
-                                Console.WriteLine($"Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
+                                Console.WriteLine($"info: Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
                             }
                             else
                             {
@@ -85,31 +89,26 @@ namespace Hephaestus.Classes
 
                 if (project.StartGameAfterBuilding)
                 {
-                    Console.WriteLine($"Starting {Path.GetFileName(project.GameExecutable)}");
-
                     Game.Launch(project.GameExecutable, project.GameExecutableArguments);
                 }
 
                 // If doesn't only have successful exit codes
-                lock (OnAddonBuilderExitLock)
+                lock (OnBuilderExitLock)
                 {
-                    if (ExitCodes.Except(new[] {0}).Any())
-                    {
-                        exitCode = 1;
-                    }
-                }
-
-                if (NotBuiltDirectories == SourceCodeDirectoryCount)
-                {
-                    if (!ConsoleUtility.AskYesNoQuestion("Rebuild?")) return exitCode;
+                    exitCode = ExitCodes.All(v => v == 0) ? 0 : 1;
                     
-                    forceBuild = true;
-                    continue;
+                    if (NotBuiltDirectories == SourceCodeDirectoryCount)
+                    {
+                        if (!ConsoleUtility.AskYesNoQuestion("Rebuild?")) return exitCode;
+                    
+                        forceBuild = true;
+                        continue;
+                    }
+
+                    project.Save();
+
+                    return exitCode;
                 }
-
-                project.Save();
-
-                return exitCode;
             }
         }
 
@@ -117,19 +116,30 @@ namespace Hephaestus.Classes
         {
             LaunchedAddonBuilders++;
 
-            AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
+            Console.WriteLine($"info: Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
+            if (project.UseArmake)
+            {
+                Armake armake = new Armake(sourceCodeDirectory, project);
 
-            Console.WriteLine($"Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
+                armake.Process.Exited += (sender, eventArgs) =>
+                    OnBuilderExit(sourceCodeDirectory, armake.Process.ExitCode,
+                        armake.Process.StartTime, armake.Process.ExitTime, project);
+            }
+            else
+            {
+                AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
 
-            addonBuilder.Process.Exited += (sender, eventArgs) =>
-                OnAddonBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode, addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime, project);
+                addonBuilder.Process.Exited += (sender, eventArgs) =>
+                    OnBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode,
+                        addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime, project);
+            }
         }
 
-        private static readonly object OnAddonBuilderExitLock = new object();
-        private static void OnAddonBuilderExit(string sourceCodeDirectory, int exitCode, DateTime startTime, DateTime exitTime, Project project)
+        private static readonly object OnBuilderExitLock = new object();
+        private static void OnBuilderExit(string sourceCodeDirectory, int exitCode, DateTime startTime, DateTime exitTime, Project project)
         {
             // Needs a lock due to a race condition if multiple AddonBuilders exit at the same time
-            lock (OnAddonBuilderExitLock)
+            lock (OnBuilderExitLock)
             {
                 ExitedAddonBuilders++;
                 
@@ -140,15 +150,15 @@ namespace Hephaestus.Classes
                     double timeToBuild = Math.Round((exitTime - startTime).TotalSeconds, 3);
                     
                     Console.WriteLine(
-                        $"Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
+                        $"info: Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
                             + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
                     
                     project.Hashes[sourceCodeDirectory].SHA1 = new Hash(sourceCodeDirectory).SHA1;
                 }
                 else
                 {
-                    throw new AddonBuilderFailedToBuildException(
-                        $"Failed to build {Path.GetFileName(sourceCodeDirectory)}");
+                    Console.Error.WriteLine(
+                        $"error: Failed to build {Path.GetFileName(sourceCodeDirectory)}. Exit code {exitCode}");
                 }
             }
         }
