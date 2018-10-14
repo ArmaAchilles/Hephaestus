@@ -102,7 +102,7 @@ namespace Hephaestus.Classes
             }
             else
             {
-                throw new SourceDirectoryNotFoundException($"{sourceDirectory} does not exist.");
+                throw new DirectoryNotFoundException($"{sourceDirectory} does not exist.");
             }
 
             return sourceCodeDirectories;

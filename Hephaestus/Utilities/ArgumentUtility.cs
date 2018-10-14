@@ -18,7 +18,7 @@ namespace Hephaestus.Utilities
                 case "help":
                 case "-h":
                 case "--help":
-                    HelpCommand();;
+                    HelpCommand();
                     break;
 
                 case "init":
@@ -32,9 +32,12 @@ namespace Hephaestus.Utilities
                     break;
 
                 default:
-                    throw new InvalidCommandException(
+                    Console.Error.WriteLine(
                         $"'{arguments[0]}' is not a Hephaestus command. See 'hephaestus help'"
                     );
+                    
+                    Environment.Exit(1);
+                    break;
             }
         }
 
@@ -55,7 +58,9 @@ namespace Hephaestus.Utilities
 
             if (ProjectUtility.ProjectExists(path))
             {
-                throw new InvalidCommandException("A Hephaestus project is already initialized. Use 'hephaestus' to launch Hephaestus.");
+                Console.Error.WriteLine("A Hephaestus project is already initialized. Use 'hephaestus' to launch Hephaestus.");
+                
+                Environment.Exit(1);
             }
             
             if (ConsoleUtility.AskYesNoQuestion("Use the command line?"))

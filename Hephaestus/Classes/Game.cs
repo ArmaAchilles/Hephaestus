@@ -15,7 +15,7 @@ namespace Hephaestus.Classes
             }
             catch (Exception e)
             {
-                throw new GameFailedToStartException(e.Message);
+                Console.Error.WriteLine($"Failed to start {gameExecutable} because {e.Message}");
             }
         }
 
@@ -44,7 +44,7 @@ namespace Hephaestus.Classes
                 }
                 catch (Exception e)
                 {
-                    throw new GameFailedToShutdownException(e.Message);
+                    Console.Error.WriteLine($"Failed to shutdown {process} because {e.Message}");
                 }
             }
         }

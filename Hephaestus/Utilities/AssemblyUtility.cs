@@ -2,7 +2,7 @@ using System.Reflection;
 
 namespace Hephaestus.Utilities
 {
-    internal class AssemblyUtility
+    internal static class AssemblyUtility
     {
         internal static string GetVersion()
         {

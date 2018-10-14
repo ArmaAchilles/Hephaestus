@@ -80,12 +80,7 @@
     <Compile Include="Classes\AddonBuilder.cs" />
     <Compile Include="Classes\Builder.cs" />
     <Compile Include="Classes\Exceptions\AddonBuilderFailedToBuildException.cs" />
-    <Compile Include="Classes\Exceptions\AddonBuilderFailedToStartException.cs" />
     <Compile Include="Classes\Exceptions\ExceptionBase.cs" />
-    <Compile Include="Classes\Exceptions\GameFailedToShutdownException.cs" />
-    <Compile Include="Classes\Exceptions\GameFailedToStartException.cs" />
-    <Compile Include="Classes\Exceptions\InvalidCommandException.cs" />
-    <Compile Include="Classes\Exceptions\SourceDirectoryNotFoundException.cs" />
     <Compile Include="Classes\Game.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

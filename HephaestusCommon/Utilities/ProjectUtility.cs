@@ -43,7 +43,7 @@ namespace HephaestusCommon.Utilities
             }
             catch (Exception e)
             {
-                throw new ProjectFailedToSaveException(e.Message);
+                Console.Error.WriteLine($"Failed to save project because {e.Message}");
             }
         }
     }

@@ -43,7 +43,7 @@ namespace Hephaestus.Classes
             }
             catch (Exception e)
             {
-                throw new AddonBuilderFailedToStartException(e.Message);
+                Console.Error.WriteLine($"Addon Builder failed to launch for {Path.GetFileName(sourceCodeDirectory)} folder because {e.Message}");
             }
         }
     }
