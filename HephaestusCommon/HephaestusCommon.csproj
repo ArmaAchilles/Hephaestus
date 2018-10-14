@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Exceptions\ProjectDoesNotExistException.cs" />
+    <Compile Include="Classes\Hash.cs" />
     <Compile Include="Classes\Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ProjectUtility.cs" />

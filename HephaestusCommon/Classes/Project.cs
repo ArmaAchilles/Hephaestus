@@ -44,8 +44,8 @@ namespace HephaestusCommon.Classes
         public bool ShutdownGameBeforeBuilding { get; set; }
         public bool StartGameAfterBuilding { get; set; }
 
-        // Folder name, checksum
-        public Dictionary<string, string> Checksums { get; set; }
+        // Directory name, SHA1
+        public Dictionary<string, Hash> Hashes { get; set; }
 
         public void Save()
         {

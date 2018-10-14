@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Hephaestus.Classes.Exceptions;
+using Hephaestus.Utilities;
 using HephaestusCommon.Classes;
 
 namespace Hephaestus.Classes
@@ -15,59 +16,117 @@ namespace Hephaestus.Classes
         private static int SourceCodeDirectoryCount { get; set; }
         private static int LaunchedAddonBuilders { get; set; }
         private static int ExitedAddonBuilders { get; set; }
+        private static int NotBuiltDirectories { get; set; }
 
-        public static int Build(Project project)
+        public static int Build(Project project, bool? forceBuild)
         {
-            int exitCode = 0;
-
-            if (project.ShutdownGameBeforeBuilding)
+            while (true)
             {
-                Game.Shutdown(
-                    new List<string>{"arma3", "arma3_x64"}
-                );
+                int exitCode = 0;
+                
+                // Reset counts (in case of a rebuild)
+                SourceCodeDirectoryCount = 0;
+                LaunchedAddonBuilders = 0;
+                ExitedAddonBuilders = 0;
+                NotBuiltDirectories = 0;
+
+                if (project.ShutdownGameBeforeBuilding)
+                {
+                    Game.Shutdown(new List<string> {"arma3", "arma3_x64"});
+                }
+
+                string[] sourceCodeDirectories = GetSourceCodeDirectories(project.SourceDirectory);
+                SourceCodeDirectoryCount = sourceCodeDirectories.Length;
+
+                Console.WriteLine($"Found {SourceCodeDirectoryCount} source code directories");
+
+                if (project.Hashes == null)
+                {
+                    project.Hashes = new Dictionary<string, Hash>();
+                }
+
+                foreach (string sourceCodeDirectory in sourceCodeDirectories)
+                {
+                    Hash hash = new Hash(sourceCodeDirectory);
+
+                    if (forceBuild == true)
+                    {
+                        BuildDirectory(sourceCodeDirectory, project);
+                    }
+                    else
+                    {
+                        if (project.Hashes.ContainsKey(sourceCodeDirectory))
+                        {
+                            Hash selectedHash = project.Hashes[sourceCodeDirectory];
+
+                            if (selectedHash.SHA1 == hash.SHA1)
+                            {
+                                NotBuiltDirectories++;
+                                Console.WriteLine($"Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
+                            }
+                            else
+                            {
+                                BuildDirectory(sourceCodeDirectory, project);
+                            }
+                        }
+                        else
+                        {
+                            project.Hashes.Add(sourceCodeDirectory, new Hash());
+                            BuildDirectory(sourceCodeDirectory, project);
+                        }
+                    }
+                }
+
+                // Wait until all builds are complete
+                while (LaunchedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount || ExitedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount)
+                {
+                    Thread.Sleep(100);
+                }
+
+                if (project.StartGameAfterBuilding)
+                {
+                    Console.WriteLine($"Starting {Path.GetFileName(project.GameExecutable)}");
+
+                    Game.Launch(project.GameExecutable, project.GameExecutableArguments);
+                }
+
+                // If doesn't only have successful exit codes
+                lock (OnAddonBuilderExitLock)
+                {
+                    if (ExitCodes.Except(new[] {0}).Any())
+                    {
+                        exitCode = 1;
+                    }
+                }
+
+                if (NotBuiltDirectories == SourceCodeDirectoryCount)
+                {
+                    if (!ConsoleUtility.AskYesNoQuestion("Rebuild?")) return exitCode;
+                    
+                    forceBuild = true;
+                    continue;
+                }
+
+                project.Save();
+
+                return exitCode;
             }
+        }
 
-            string[] sourceCodeDirectories = GetSourceCodeDirectories(project.SourceDirectory);
-            SourceCodeDirectoryCount = sourceCodeDirectories.Length;
+        private static void BuildDirectory(string sourceCodeDirectory, Project project)
+        {
+            LaunchedAddonBuilders++;
 
-            Console.WriteLine($"Found {SourceCodeDirectoryCount} source code directories");
+            AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
 
-            foreach (string sourceCodeDirectory in sourceCodeDirectories)
-            {
-                LaunchedAddonBuilders++;
+            Console.WriteLine($"Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
 
-                AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
-
-                Console.WriteLine($"Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount})");
-
-                addonBuilder.Process.Exited += (sender, eventArgs) =>
-                    OnAddonBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode, addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime);
-            }
-
-            // Wait until all builds are complete
-            while (LaunchedAddonBuilders != SourceCodeDirectoryCount || ExitedAddonBuilders != SourceCodeDirectoryCount)
-            {
-                Thread.Sleep(100);
-            }
-
-            if (project.StartGameAfterBuilding)
-            {
-                Console.WriteLine($"Starting {Path.GetFileName(project.GameExecutable)}");
-
-                Game.Launch(project.GameExecutable, project.GameExecutableArguments);
-            }
-            
-            // If doesn't only have successful exit codes
-            if (ExitCodes.Except(new[] { 0 }).Any())
-            {
-                exitCode = 1;
-            }
-
-            return exitCode;
+            addonBuilder.Process.Exited += (sender, eventArgs) =>
+                OnAddonBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode, addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime, project);
         }
 
         private static readonly object OnAddonBuilderExitLock = new object();
-        private static void OnAddonBuilderExit(string sourceCodeDirectory, int exitCode, DateTime startTime, DateTime exitTime)
+        private static void OnAddonBuilderExit(string sourceCodeDirectory, int exitCode, DateTime startTime, DateTime exitTime, Project project)
         {
             // Needs a lock due to a race condition if multiple AddonBuilders exit at the same time
             lock (OnAddonBuilderExitLock)
@@ -83,6 +142,8 @@ namespace Hephaestus.Classes
                     Console.WriteLine(
                         $"Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
                             + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
+                    
+                    project.Hashes[sourceCodeDirectory].SHA1 = new Hash(sourceCodeDirectory).SHA1;
                 }
                 else
                 {

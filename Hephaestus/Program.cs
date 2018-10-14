@@ -27,7 +27,7 @@ namespace Hephaestus
                 throw new ProjectDoesNotExistException("Project configuration file does not exist. Run 'hephaestus init' to create one.");
             }
 
-            int exitCode = Builder.Build(project);
+            int exitCode = Builder.Build(project, null);
 
             Environment.Exit(exitCode);
         }
