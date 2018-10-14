@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
@@ -20,7 +21,7 @@ namespace HephaestusConfigurator
 
         private void comboBox_projectDirectory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comboBox_projectDirectory.SelectedItem == comboBox_projectDirectory_addNew)
+            if (ComboBoxProjectDirectory.SelectedItem == ComboBoxProjectDirectoryAddNew)
             {
                 AddProjectDirectoryToComboBox(Dialogs.OpenFileDialogToSelectFolder());
             }
@@ -29,28 +30,30 @@ namespace HephaestusConfigurator
         private void button_projectDirectory_Click(object sender, RoutedEventArgs e)
         {
             AddProjectDirectoryToComboBox(Dialogs.OpenFileDialogToSelectFolder());
+            
+            LoadAllFields();
         }
 
         private void button_sourceDirectory_Click(object sender, RoutedEventArgs e)
         {
-            textBox_sourceDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
+            TextBoxSourceDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
         }
 
         private void button_targetDirectory_Click(object sender, RoutedEventArgs e)
         {
-            textBox_targetDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
+            TextBoxTargetDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
         }
 
         private void button_addonBuilderFile_Click(object sender, RoutedEventArgs e)
         {
             string defaultAddonBuilderPath = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\addonbuilder", "path");
 
-            textBox_addonBuilderFile.Text = Dialogs.OpenFileDialogToSelectFile(defaultAddonBuilderPath, "AddonBuilder.exe", "Addon Builder|AddonBuilder.exe");
+            TextBoxAddonBuilderFile.Text = Dialogs.OpenFileDialogToSelectFile(defaultAddonBuilderPath, "AddonBuilder.exe", "Addon Builder|AddonBuilder.exe");
         }
 
         private void button_privateKeyFile_Click(object sender, RoutedEventArgs e)
         {
-            textBox_privateKeyFile.Text = Dialogs.OpenFileDialogToSelectFile("", ".biprivatekey", "BI Private Key (*.biprivatekey)|*.biprivatekey");
+            TextBoxPrivateKeyFile.Text = Dialogs.OpenFileDialogToSelectFile("", ".biprivatekey", "BI Private Key (*.biprivatekey)|*.biprivatekey");
         }
 
         private void button_privateKeyFileCreateNew_Click(object sender, RoutedEventArgs e)
@@ -62,24 +65,24 @@ namespace HephaestusConfigurator
         {
             string defaultArma3Path = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\arma 3", "main");
 
-            textBox_gameExecutable.Text = Dialogs.OpenFileDialogToSelectFile(defaultArma3Path);
+            TextBoxGameExecutable.Text = Dialogs.OpenFileDialogToSelectFile(defaultArma3Path);
         }
 
         private void button_saveSettings_Click(object sender, RoutedEventArgs e)
         {
-            string path = comboBox_projectDirectory.Text;
+            string path = ComboBoxProjectDirectory.Text;
 
             Project project = new Project(
                 path,
-                textBox_sourceDirectory.Text,
-                textBox_targetDirectory.Text,
-                textBox_addonBuilderFile.Text,
-                textBox_projectPrefix.Text,
-                textBox_privateKeyFile.Text,
-                textBox_gameExecutable.Text,
-                textBox_gameExecutableArguments.Text,
-                checkbox_shutdownGameBeforeBuilding.IsChecked ?? false,
-                checkbox_startGameAfterBuilding.IsChecked ?? false);
+                TextBoxSourceDirectory.Text,
+                TextBoxTargetDirectory.Text,
+                TextBoxAddonBuilderFile.Text,
+                TextBoxProjectPrefix.Text,
+                TextBoxPrivateKeyFile.Text,
+                TextBoxGameExecutable.Text,
+                TextBoxGameExecutableArguments.Text,
+                CheckboxShutdownGameBeforeBuilding.IsChecked ?? false,
+                CheckboxStartGameAfterBuilding.IsChecked ?? false);
 
             project.Save();
 
@@ -90,10 +93,42 @@ namespace HephaestusConfigurator
         {
             if (path.Length <= 0) return;
             
-            int indexToInsert = comboBox_projectDirectory.Items.Count - 1;
+            int indexToInsert = ComboBoxProjectDirectory.Items.Count - 1;
 
-            comboBox_projectDirectory.Items.Insert(comboBox_projectDirectory.Items.Count - 1, new ComboBoxItem { Content = path });
-            comboBox_projectDirectory.SelectedIndex = indexToInsert;
+            ComboBoxProjectDirectory.Items.Insert(ComboBoxProjectDirectory.Items.Count - 1, new ComboBoxItem { Content = path });
+            ComboBoxProjectDirectory.SelectedIndex = indexToInsert;
+        }
+
+        private void ComboBoxProjectDirectory_OnLostFocus(object sender, RoutedEventArgs e)
+        {
+            LoadAllFields();
+        }
+        
+        private void ComboBoxProjectDirectory_OnKeyUp(object sender, RoutedEventArgs e)
+        {
+            LoadAllFields();
+        }
+
+        private void LoadAllFields()
+        {
+            if (ComboBoxProjectDirectory.SelectedItem == ComboBoxProjectDirectoryAddNew) return;
+            
+            string path = ComboBoxProjectDirectory.Text;
+            if (! Directory.Exists(path)) return;
+            
+            if (! ProjectUtility.ProjectExists(path)) return;
+            
+            Project project = ProjectUtility.GetProject(path);
+            
+            TextBoxSourceDirectory.Text = project.SourceDirectory;
+            TextBoxTargetDirectory.Text = project.TargetDirectory;
+            TextBoxAddonBuilderFile.Text = project.AddonBuilderFile;
+            TextBoxProjectPrefix.Text = project.ProjectPrefix;
+            TextBoxPrivateKeyFile.Text = project.PrivateKeyFile;
+            TextBoxGameExecutable.Text = project.GameExecutable;
+            TextBoxGameExecutableArguments.Text = project.GameExecutableArguments;
+            CheckboxShutdownGameBeforeBuilding.IsChecked = project.ShutdownGameBeforeBuilding;
+            CheckboxStartGameAfterBuilding.IsChecked = project.StartGameAfterBuilding;
         }
     }
 }
