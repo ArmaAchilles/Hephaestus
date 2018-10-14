@@ -81,7 +81,7 @@ namespace HephaestusConfigurator
                 checkbox_shutdownGameBeforeBuilding.IsChecked ?? false,
                 checkbox_startGameAfterBuilding.IsChecked ?? false);
 
-            ProjectUtility.SetProject(path, project);
+            project.Save();
 
             MessageBox.Show("Hephaestus Project Saved!", "Hephaestus Configurator", MessageBoxButton.OK, MessageBoxImage.Information);
         }

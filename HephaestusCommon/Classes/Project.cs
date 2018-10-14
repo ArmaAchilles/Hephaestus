@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using HephaestusCommon.Utilities;
 
 namespace HephaestusCommon.Classes
 {
@@ -45,5 +46,10 @@ namespace HephaestusCommon.Classes
 
         // Folder name, checksum
         public Dictionary<string, string> Checksums { get; set; }
+
+        public void Save()
+        {
+            ProjectUtility.SetProject(ProjectDirectory, this);
+        }
     }
 }
