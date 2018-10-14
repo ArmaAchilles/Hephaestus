@@ -22,6 +22,12 @@ namespace Hephaestus.Utilities
                 case "init":
                     InitCommand();
                     break;
+                
+                case "version":
+                case "-v":
+                case "--version":
+                    VersionCommand();
+                    break;
 
                 default:
                     throw new InvalidCommandException(
@@ -60,6 +66,13 @@ namespace Hephaestus.Utilities
 
             Process.Start(processStartInfo);
 
+            Environment.Exit(0);
+        }
+
+        private static void VersionCommand()
+        {
+            Console.WriteLine(AssemblyUtility.GetVersion());
+            
             Environment.Exit(0);
         }
     }
