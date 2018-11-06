@@ -78,7 +78,6 @@
     <Compile Include="Classes\Builders\Armake.cs" />
     <Compile Include="Classes\Exceptions\BuilderFailedToBuildException.cs" />
     <Compile Include="Classes\Exceptions\ExceptionBase.cs" />
-    <Compile Include="Classes\Game.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ArgumentUtility.cs" />

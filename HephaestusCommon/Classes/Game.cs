@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace Hephaestus.Classes
+namespace HephaestusCommon.Classes
 {
-    public static class Game
+    public class Game
     {
-        internal static void Launch(string gameExecutable, string gameExecutableArguments)
+        public string GameExecutable { get; set; }
+        public string GameExecutableArguments { get; set; }
+
+        public Game(string gameExecutable, string gameExecutableArguments)
+        {
+            GameExecutable = gameExecutable;
+            GameExecutableArguments = gameExecutableArguments;
+        }
+
+        public static void Launch(string gameExecutable, string gameExecutableArguments)
         {
             try
             {

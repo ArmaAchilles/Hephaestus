@@ -138,7 +138,8 @@ namespace Hephaestus.Utilities
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
             
             Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
-                privateKeyFile, gameExecutable, gameExecutableArguments, shutdownGameBeforeBuilding, startGameAfterBuilding);
+                privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,
+                startGameAfterBuilding);
             
             project.Save();
             

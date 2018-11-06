@@ -78,8 +78,7 @@ namespace HephaestusConfigurator
                 TextBoxAddonBuilderFile.Text,
                 TextBoxProjectPrefix.Text,
                 TextBoxPrivateKeyFile.Text,
-                TextBoxGameExecutable.Text,
-                TextBoxGameExecutableArguments.Text,
+                new Game(TextBoxGameExecutable.Text, TextBoxGameExecutableArguments.Text), 
                 CheckboxShutdownGameBeforeBuilding.IsChecked ?? false,
                 CheckboxStartGameAfterBuilding.IsChecked ?? false);
 
@@ -136,8 +135,8 @@ namespace HephaestusConfigurator
             TextBoxAddonBuilderFile.Text = project.AddonBuilderFile;
             TextBoxProjectPrefix.Text = project.ProjectPrefix;
             TextBoxPrivateKeyFile.Text = project.PrivateKeyFile;
-            TextBoxGameExecutable.Text = project.GameExecutable;
-            TextBoxGameExecutableArguments.Text = project.GameExecutableArguments;
+            TextBoxGameExecutable.Text = project.Game.GameExecutable;
+            TextBoxGameExecutableArguments.Text = project.Game.GameExecutableArguments;
             CheckboxShutdownGameBeforeBuilding.IsChecked = project.ShutdownGameBeforeBuilding;
             CheckboxStartGameAfterBuilding.IsChecked = project.StartGameAfterBuilding;
         }

@@ -87,7 +87,7 @@ namespace Hephaestus.Classes
 
                 if (project.StartGameAfterBuilding)
                 {
-                    Game.Launch(project.GameExecutable, project.GameExecutableArguments);
+                    Game.Launch(project.Game.GameExecutable, project.Game.GameExecutableArguments);
                 }
 
                 // If doesn't only have successful exit codes

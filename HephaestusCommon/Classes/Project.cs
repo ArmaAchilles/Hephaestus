@@ -12,8 +12,7 @@ namespace HephaestusCommon.Classes
 
         public Project(string projectDirectory, string sourceDirectory, string targetDirectory,
             string addonBuilderFile, string projectPrefix, string privateKeyFile,
-            string gameExecutable, string gameExecutableArguments, bool shutdownGameBeforeBuilding,
-            bool startGameAfterBuilding)
+            Game game, bool shutdownGameBeforeBuilding, bool startGameAfterBuilding)
         {
             ProjectDirectory = projectDirectory;
             SourceDirectory = sourceDirectory;
@@ -21,8 +20,7 @@ namespace HephaestusCommon.Classes
             AddonBuilderFile = addonBuilderFile;
             ProjectPrefix = projectPrefix;
             PrivateKeyFile = privateKeyFile;
-            GameExecutable = gameExecutable;
-            GameExecutableArguments = gameExecutableArguments;
+            Game = game;
             ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
             StartGameAfterBuilding = startGameAfterBuilding;
         }
@@ -37,9 +35,8 @@ namespace HephaestusCommon.Classes
         public string ProjectPrefix { get; set; }
 
         public string PrivateKeyFile { get; set; }
-
-        public string GameExecutable { get; set; }
-        public string GameExecutableArguments { get; set; }
+        
+        public Game Game { get; set; }
 
         public bool ShutdownGameBeforeBuilding { get; set; }
         public bool StartGameAfterBuilding { get; set; }
