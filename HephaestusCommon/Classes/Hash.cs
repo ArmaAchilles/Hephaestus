@@ -38,7 +38,7 @@ namespace HephaestusCommon.Classes
 
                 sha1.TransformFinalBlock(new byte[0], 0, 0);
 
-                return BitConverter.ToString(sha1.Hash).Replace("-", "").ToLower();
+                return BitConverter.ToString(sha1.Hash).Replace("-", "").ToLowerInvariant();
             }
         }
     }

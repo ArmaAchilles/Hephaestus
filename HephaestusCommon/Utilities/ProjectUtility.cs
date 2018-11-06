@@ -24,11 +24,9 @@ namespace HephaestusCommon.Utilities
         {
             string jsonPath = GetJsonPath(path);
 
-            Project project = File.Exists(jsonPath)
+            return File.Exists(jsonPath)
                 ? JsonConvert.DeserializeObject<Project>(File.ReadAllText(jsonPath))
                 : throw new ProjectDoesNotExistException();
-
-            return project;
         }
 
         public static void SetProject(string path, Project project)

@@ -5,7 +5,12 @@ namespace HephaestusConfigurator.Utilities
 {
     public static class Dialogs
     {
-        public static string OpenFileDialogToSelectFolder(string initialDirectory = "")
+        public static string OpenFileDialogToSelectFolder()
+        {
+            return OpenFileDialogToSelectFolder(null);
+        }
+
+        private static string OpenFileDialogToSelectFolder(string initialDirectory = "")
         {
             string selectedFolder = "";
 
@@ -21,6 +26,11 @@ namespace HephaestusConfigurator.Utilities
             }
 
             return selectedFolder;
+        }
+
+        public static string OpenFileDialogToSelectFile(string initialDirectory)
+        {
+            return OpenFileDialogToSelectFile(initialDirectory, null, null);
         }
 
         public static string OpenFileDialogToSelectFile(string initialDirectory = "",

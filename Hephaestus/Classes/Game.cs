@@ -29,7 +29,10 @@ namespace Hephaestus.Classes
             {
                 string processName = process.ProcessName.ToLower();
 
-                if (! processesToShutdown.Contains(processName)) continue;
+                if (! processesToShutdown.Contains(processName))
+                {
+                     continue;
+                }
                 
                 Console.WriteLine($"info: Found {processName}. Terminating process...");
 

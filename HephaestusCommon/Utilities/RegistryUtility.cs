@@ -23,7 +23,7 @@ namespace HephaestusCommon.Utilities
             }
             catch (Exception)
             {
-                // ignored
+                // Exception is ignored because it doesn't matter for us if the key doesn't exist
             }
 
             return value;

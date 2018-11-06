@@ -58,7 +58,9 @@ namespace Hephaestus.Classes.Builders
         private static void OnErrorDataReceived(DataReceivedEventArgs e, string sourceCodeDirectory)
         {
             if (! string.IsNullOrEmpty(e.Data))
+            {
                 Console.Error.WriteLine($"{Path.GetFileName(sourceCodeDirectory)} | {e.Data}");
+            }
         }
     }
 }

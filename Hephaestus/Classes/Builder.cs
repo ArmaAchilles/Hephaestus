@@ -26,9 +26,11 @@ namespace Hephaestus.Classes
                 LaunchedAddonBuilders = 0;
                 ExitedAddonBuilders = 0;
                 NotBuiltDirectories = 0;
-                
+
                 if (forceBuild)
+                {
                     Console.WriteLine("Rebuilding...");
+                }
 
                 if (project.ShutdownGameBeforeBuilding)
                 {
@@ -91,13 +93,16 @@ namespace Hephaestus.Classes
                 // If doesn't only have successful exit codes
                 lock (OnBuilderExitLock)
                 {
+                    // Check if any non-zero exit codes were present
                     int exitCode = ExitCodes.All(v => v == 0) ? 0 : 1;
                     
                     if (NotBuiltDirectories == SourceCodeDirectoryCount)
                     {
-                        if (!ConsoleUtility.AskYesNoQuestion("Rebuild?")) return exitCode;
-                    
-                        forceBuild = true;
+                        if (! ConsoleUtility.AskYesNoQuestion("Rebuild?"))
+                        {
+                            return exitCode;
+                        }
+                        
                         continue;
                     }
 

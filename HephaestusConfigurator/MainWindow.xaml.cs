@@ -90,7 +90,10 @@ namespace HephaestusConfigurator
 
         private void AddProjectDirectoryToComboBox(string path)
         {
-            if (path.Length <= 0) return;
+            if (path.Length <= 0)
+            {
+                return;
+            }
             
             int indexToInsert = ComboBoxProjectDirectory.Items.Count - 1;
 
@@ -110,12 +113,21 @@ namespace HephaestusConfigurator
 
         private void LoadAllFields()
         {
-            if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew)) return;
+            if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew))
+            {
+                return;
+            }
             
             string path = ComboBoxProjectDirectory.Text;
-            if (! Directory.Exists(path)) return;
-            
-            if (! ProjectUtility.ProjectExists(path)) return;
+            if (! Directory.Exists(path))
+            {
+                return;
+            }
+
+            if (! ProjectUtility.ProjectExists(path))
+            {
+                return;
+            }
             
             Project project = ProjectUtility.GetProject(path);
             
@@ -134,9 +146,15 @@ namespace HephaestusConfigurator
         {
             string[] arguments = Environment.GetCommandLineArgs();
 
-            if (arguments.Length <= 1) return;
+            if (arguments.Length <= 1)
+            {
+                return;
+            }
 
-            if (! Directory.Exists(arguments[1])) return;
+            if (! Directory.Exists(arguments[1]))
+            {
+                return;
+            }
             
             ComboBoxProjectDirectory.Text = arguments[1];
                 
