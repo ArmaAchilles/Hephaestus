@@ -2,11 +2,9 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Win32;
 using HephaestusConfigurator.Utilities;
 using HephaestusCommon.Utilities;
 using HephaestusCommon.Classes;
-using Microsoft.WindowsAPICodePack.Shell.Interop;
 
 namespace HephaestusConfigurator
 {
@@ -22,7 +20,7 @@ namespace HephaestusConfigurator
 
         private void comboBox_projectDirectory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (ComboBoxProjectDirectory.SelectedItem == ComboBoxProjectDirectoryAddNew)
+            if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew))
             {
                 AddProjectDirectoryToComboBox(Dialogs.OpenFileDialogToSelectFolder());
             }
@@ -112,7 +110,7 @@ namespace HephaestusConfigurator
 
         private void LoadAllFields()
         {
-            if (ComboBoxProjectDirectory.SelectedItem == ComboBoxProjectDirectoryAddNew) return;
+            if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew)) return;
             
             string path = ComboBoxProjectDirectory.Text;
             if (! Directory.Exists(path)) return;
@@ -136,7 +134,7 @@ namespace HephaestusConfigurator
         {
             string[] arguments = Environment.GetCommandLineArgs();
 
-            if (arguments.Length <= 0) return;
+            if (arguments.Length <= 1) return;
 
             if (! Directory.Exists(arguments[1])) return;
             

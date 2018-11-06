@@ -1,7 +1,6 @@
 ﻿using System;
-using Hephaestus.Classes.Exceptions;
 
-namespace Hephaestus.Classes
+namespace Hephaestus.Classes.Exceptions
 {
     internal class BuilderFailedToBuildException : ExceptionBase
     {

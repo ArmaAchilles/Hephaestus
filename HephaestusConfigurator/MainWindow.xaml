@@ -21,7 +21,7 @@
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>
     
-    <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40*"></ColumnDefinition>
@@ -85,7 +85,8 @@
             <CheckBox x:Name="CheckboxShutdownGameBeforeBuilding" Content="Shutdown Game Before Building" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
             <CheckBox x:Name="CheckboxStartGameAfterBuilding" Content="Start Game After Building" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
 
-            <Button Content="Save Settings" Grid.Row="10" Grid.ColumnSpan="2" Click="button_saveSettings_Click" />
+            <Button Content="Save Settings" Grid.Row="10" Grid.ColumnSpan="2" Grid.Column="0"
+                    Click="button_saveSettings_Click" />
         </Grid>
     </ScrollViewer>
 </controls:MetroWindow>

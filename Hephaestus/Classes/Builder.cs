@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using Hephaestus.Classes.Builders;
-using Hephaestus.Classes.Exceptions;
 using Hephaestus.Utilities;
 using HephaestusCommon.Classes;
 
@@ -23,8 +21,6 @@ namespace Hephaestus.Classes
         {
             while (true)
             {
-                int exitCode = 0;
-                
                 // Reset counts (in case of a rebuild)
                 SourceCodeDirectoryCount = 0;
                 LaunchedAddonBuilders = 0;
@@ -63,7 +59,7 @@ namespace Hephaestus.Classes
                         {
                             Hash selectedHash = project.Hashes[sourceCodeDirectory];
 
-                            if (selectedHash.SHA1 == hash.SHA1)
+                            if (selectedHash.Sha1 == hash.Sha1)
                             {
                                 NotBuiltDirectories++;
                                 Console.WriteLine($"info: Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
@@ -95,7 +91,7 @@ namespace Hephaestus.Classes
                 // If doesn't only have successful exit codes
                 lock (OnBuilderExitLock)
                 {
-                    exitCode = ExitCodes.All(v => v == 0) ? 0 : 1;
+                    int exitCode = ExitCodes.All(v => v == 0) ? 0 : 1;
                     
                     if (NotBuiltDirectories == SourceCodeDirectoryCount)
                     {
@@ -153,7 +149,7 @@ namespace Hephaestus.Classes
                         $"info: Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
                             + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
                     
-                    project.Hashes[sourceCodeDirectory].SHA1 = new Hash(sourceCodeDirectory).SHA1;
+                    project.Hashes[sourceCodeDirectory].Sha1 = new Hash(sourceCodeDirectory).Sha1;
                 }
                 else
                 {

@@ -10,22 +10,22 @@ namespace HephaestusCommon.Classes
     {
         public Hash()
         {
-            SHA1 = "";
+            Sha1 = "";
         }
         
         public Hash(string directoryName)
         {
-            SHA1 = HashDirectory(directoryName);
+            Sha1 = HashDirectory(directoryName);
         }
 
-        public string SHA1 { get; set; }
+        public string Sha1 { get; set; }
 
         private static string HashDirectory(string directory)
         {
             string[] files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories)
                 .OrderBy(file => file).ToArray();
 
-            using (SHA1 sha1 = System.Security.Cryptography.SHA1.Create())
+            using (SHA1 sha1 = SHA1.Create())
             {
                 foreach (string file in files)
                 {

@@ -23,6 +23,7 @@ namespace HephaestusCommon.Utilities
             }
             catch (Exception)
             {
+                // ignored
             }
 
             return value;
