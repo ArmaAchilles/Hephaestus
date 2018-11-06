@@ -28,10 +28,7 @@ namespace Hephaestus.Utilities
                     break;
                 }
 
-                if (key != ConsoleKey.Y && key != ConsoleKey.N)
-                {
-                    Console.WriteLine("Incorrect selection. Try again.");
-                }
+                Console.WriteLine("Incorrect selection. Try again.");
             }
 
             return result;

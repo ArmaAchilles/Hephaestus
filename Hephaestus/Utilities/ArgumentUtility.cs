@@ -10,7 +10,10 @@ namespace Hephaestus.Utilities
     {
         internal static void Handle(string[] arguments)
         {
-            if (arguments.Length != 1) return;
+            if (arguments.Length != 1)
+            {
+                return;
+            }
             
             switch (arguments[0])
             {
