@@ -4,40 +4,20 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 namespace HephaestusConfigurator.Utilities
 {
     public static class Dialogs
-    {
+    {        
         public static string OpenFileDialogToSelectFolder()
         {
-            return OpenFileDialogToSelectFolder(null);
-        }
-
-        private static string OpenFileDialogToSelectFolder(string initialDirectory = "")
-        {
-            string selectedFolder = "";
-
             CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
-                IsFolderPicker = true,
-                InitialDirectory = initialDirectory
+                IsFolderPicker = true
             };
 
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                selectedFolder = dialog.FileName;
-            }
-
-            return selectedFolder;
+            return dialog.ShowDialog() == CommonFileDialogResult.Ok ? dialog.FileName : "";
         }
 
-        public static string OpenFileDialogToSelectFile(string initialDirectory)
-        {
-            return OpenFileDialogToSelectFile(initialDirectory, null, null);
-        }
-
-        public static string OpenFileDialogToSelectFile(string initialDirectory = "",
+        public static string OpenFileDialogToSelectFile(string initialDirectory,
             string defaultExtension = ".exe", string allowedExtensions = "Executable Files (*.exe)|*.exe")
         {
-            string selectedFile = "";
-
             OpenFileDialog dialog = new OpenFileDialog
             {
                 DefaultExt = defaultExtension,
@@ -49,10 +29,10 @@ namespace HephaestusConfigurator.Utilities
 
             if (result.HasValue && result.Value)
             {
-                selectedFile = dialog.FileName;
+                return dialog.FileName;
             }
 
-            return selectedFile;
+            return "";
         }
     }
 }
