@@ -1,0 +1,92 @@
+﻿<controls:MetroWindow x:Class="HephaestusConfigurator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        WindowTitleBrush="#561D25"
+        NonActiveWindowTitleBrush="#561D25"
+        BorderBrush="#561D25"
+        NonActiveBorderBrush="#561D25"
+        Title="Hephaestus Configurator" Height="450" Width="650">
+    
+    <controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                 Height="{TemplateBinding Height}"
+                 Margin="4"
+                 Background="Transparent"
+                 RenderOptions.EdgeMode="Aliased"
+                 RenderOptions.BitmapScalingMode="HighQuality">
+                <Image Source="Resources/AchillesLogo.ico"></Image>
+            </Grid>
+        </DataTemplate>
+    </controls:MetroWindow.IconTemplate>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0,5,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40*"></ColumnDefinition>
+                <ColumnDefinition Width="10*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Label Content="Project Directory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="98"/>
+            <ComboBox IsEditable="true" Loaded="ComboBoxProjectDirectory_OnLoaded" x:Name="ComboBoxProjectDirectory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Margin="10,36,0,0" KeyUp="ComboBoxProjectDirectory_OnKeyUp" LostFocus="ComboBoxProjectDirectory_OnLostFocus" SelectionChanged="comboBox_projectDirectory_SelectionChanged">
+                <ComboBoxItem Name="ComboBoxProjectDirectoryAddNew">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Add new project..."></TextBlock>
+                    </StackPanel>
+                </ComboBoxItem>
+            </ComboBox>
+            <Button Content="Select" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_projectDirectory_Click"/>
+
+            <Label Content="Source Directory" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="98"/>
+            <TextBox x:Name="TextBoxSourceDirectory" HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <Button Content="Select" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_sourceDirectory_Click"/>
+
+            <Label Content="Target Directory" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="98"/>
+            <TextBox x:Name="TextBoxTargetDirectory" HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <Button Content="Select" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_targetDirectory_Click"/>
+
+            <Label Content="Addon Builder File" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
+            <TextBox x:Name="TextBoxAddonBuilderFile" HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <Button Content="Select" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_addonBuilderFile_Click"/>
+
+
+            <Label Content="Project Prefix" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
+            <TextBox x:Name="TextBoxProjectPrefix" HorizontalAlignment="Stretch" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Height="26" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+
+            <Label Content="Private Key File" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
+            <TextBox x:Name="TextBoxPrivateKeyFile" HorizontalAlignment="Stretch" Grid.Row="5" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <Button Content="Select" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,35,5,0" VerticalAlignment="Top" Height="26" Click="button_privateKeyFile_Click"/>
+            <Button Content="Create New" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,5,5,0" VerticalAlignment="Top" Height="26" Click="button_privateKeyFileCreateNew_Click"/>
+            
+            
+            <Label Content="Game Executable" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
+            <TextBox x:Name="TextBoxGameExecutable" HorizontalAlignment="Stretch" Grid.Row="6" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <Button Content="Select" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_gameExecutable_Click"/>
+
+            <Label Content="Game Executable Arguments" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="164"/>
+            <TextBox x:Name="TextBoxGameExecutableArguments" HorizontalAlignment="Stretch" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Height="26" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            
+            <CheckBox x:Name="CheckboxShutdownGameBeforeBuilding" Content="Shutdown Game Before Building" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
+            <CheckBox x:Name="CheckboxStartGameAfterBuilding" Content="Start Game After Building" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
+
+            <Button Content="Save Settings" Grid.Row="10" Grid.ColumnSpan="2" Grid.Column="0"
+                    Click="button_saveSettings_Click" />
+        </Grid>
+    </ScrollViewer>
+</controls:MetroWindow>
