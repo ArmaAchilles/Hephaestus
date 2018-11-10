@@ -51,8 +51,10 @@ namespace Hephaestus.Utilities
         {
             Console.WriteLine("Available Hephaestus commands are:");
             Console.WriteLine("    Launching with no commands will initiate building of your current project (if present).");
-            Console.WriteLine("    init    Initiate a new Hephaestus project at your current CD location.");
-            Console.WriteLine("    help    Display this again.");
+            Console.WriteLine("    init        Initiate a new Hephaestus project at your current CD location.");
+            Console.WriteLine("    force       Force build a project ignoring all checksums.");
+            Console.WriteLine("    version     Show Hephaestus version.");
+            Console.WriteLine("    help        Display this again.");
 
             Environment.Exit(0);
         }
