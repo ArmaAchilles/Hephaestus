@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using Hephaestus.Classes.Builders;
 using Hephaestus.Utilities;
-using HephaestusCommon.Classes;
+using Hephaestus.Common.Classes;
 
 namespace Hephaestus.Classes
 {
@@ -80,7 +80,8 @@ namespace Hephaestus.Classes
                 }
 
                 // Wait until all builds are complete
-                while (LaunchedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount || ExitedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount)
+                while (LaunchedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount ||
+                       ExitedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount)
                 {
                     Thread.Sleep(100);
                 }

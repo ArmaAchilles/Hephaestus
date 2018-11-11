@@ -1,4 +1,4 @@
-﻿<controls:MetroWindow x:Class="HephaestusConfigurator.MainWindow"
+﻿<controls:MetroWindow x:Class="Hephaestus.Configurator.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"

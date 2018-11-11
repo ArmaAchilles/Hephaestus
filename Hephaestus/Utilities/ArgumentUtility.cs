@@ -1,8 +1,9 @@
-﻿using HephaestusCommon.Utilities;
+﻿using Hephaestus.Common.Utilities;
 using System;
 using System.Diagnostics;
 using System.IO;
-using HephaestusCommon.Classes;
+using System.Runtime.InteropServices;
+using Hephaestus.Common.Classes;
 
 namespace Hephaestus.Utilities
 {
@@ -70,6 +71,12 @@ namespace Hephaestus.Utilities
                 
                 Environment.Exit(1);
             }
+
+            if (! RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                InitFromCommandLineCommand();
+                return;
+            }
             
             if (ConsoleUtility.AskYesNoQuestion("Use the command line?"))
             {
@@ -82,7 +89,7 @@ namespace Hephaestus.Utilities
             {
                 Arguments = path,
                 // TODO: Create key in HephaestusInstaller
-                FileName = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\ArmaAchilles\Hephaestus\HephaestusConfigurator", "Path")
+                FileName = Path.Combine(path, "HephaestusConfigurator.exe")
             };
 
             Process.Start(processStartInfo);

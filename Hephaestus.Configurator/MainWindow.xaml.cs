@@ -2,11 +2,11 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using HephaestusConfigurator.Utilities;
-using HephaestusCommon.Utilities;
-using HephaestusCommon.Classes;
+using Hephaestus.Configurator.Utilities;
+using Hephaestus.Common.Utilities;
+using Hephaestus.Common.Classes;
 
-namespace HephaestusConfigurator
+namespace Hephaestus.Configurator
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -22,37 +22,37 @@ namespace HephaestusConfigurator
         {
             if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew))
             {
-                AddProjectDirectoryToComboBox(Dialogs.OpenFileDialogToSelectFolder());
+                AddProjectDirectoryToComboBox(DialogUtility.OpenFileDialogToSelectFolder());
             }
         }
 
         private void button_projectDirectory_Click(object sender, RoutedEventArgs e)
         {
-            AddProjectDirectoryToComboBox(Dialogs.OpenFileDialogToSelectFolder());
+            AddProjectDirectoryToComboBox(DialogUtility.OpenFileDialogToSelectFolder());
             
             LoadAllFields();
         }
 
         private void button_sourceDirectory_Click(object sender, RoutedEventArgs e)
         {
-            TextBoxSourceDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
+            TextBoxSourceDirectory.Text = DialogUtility.OpenFileDialogToSelectFolder();
         }
 
         private void button_targetDirectory_Click(object sender, RoutedEventArgs e)
         {
-            TextBoxTargetDirectory.Text = Dialogs.OpenFileDialogToSelectFolder();
+            TextBoxTargetDirectory.Text = DialogUtility.OpenFileDialogToSelectFolder();
         }
 
         private void button_addonBuilderFile_Click(object sender, RoutedEventArgs e)
         {
             string defaultAddonBuilderPath = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\addonbuilder", "path");
 
-            TextBoxAddonBuilderFile.Text = Dialogs.OpenFileDialogToSelectFile(defaultAddonBuilderPath, "AddonBuilder.exe", "Addon Builder|AddonBuilder.exe");
+            TextBoxAddonBuilderFile.Text = DialogUtility.OpenFileDialogToSelectFile(defaultAddonBuilderPath, "AddonBuilder.exe", "Addon Builder|AddonBuilder.exe");
         }
 
         private void button_privateKeyFile_Click(object sender, RoutedEventArgs e)
         {
-            TextBoxPrivateKeyFile.Text = Dialogs.OpenFileDialogToSelectFile("", ".biprivatekey", "BI Private Key (*.biprivatekey)|*.biprivatekey");
+            TextBoxPrivateKeyFile.Text = DialogUtility.OpenFileDialogToSelectFile("", ".biprivatekey", "BI Private Key (*.biprivatekey)|*.biprivatekey");
         }
 
         private void button_privateKeyFileCreateNew_Click(object sender, RoutedEventArgs e)
@@ -64,7 +64,7 @@ namespace HephaestusConfigurator
         {
             string defaultArma3Path = RegistryUtility.GetKey(@"SOFTWARE\WOW6432Node\Bohemia Interactive\arma 3", "main");
 
-            TextBoxGameExecutable.Text = Dialogs.OpenFileDialogToSelectFile(defaultArma3Path);
+            TextBoxGameExecutable.Text = DialogUtility.OpenFileDialogToSelectFile(defaultArma3Path);
         }
 
         private void button_saveSettings_Click(object sender, RoutedEventArgs e)

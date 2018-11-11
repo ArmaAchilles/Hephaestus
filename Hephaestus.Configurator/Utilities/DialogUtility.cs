@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace HephaestusConfigurator.Utilities
+namespace Hephaestus.Configurator.Utilities
 {
-    public static class Dialogs
+    public static class DialogUtility
     {        
         public static string OpenFileDialogToSelectFolder()
         {

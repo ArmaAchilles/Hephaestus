@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using HephaestusCommon.Classes;
+using Hephaestus.Common.Classes;
 
 namespace Hephaestus.Classes.Builders
 {

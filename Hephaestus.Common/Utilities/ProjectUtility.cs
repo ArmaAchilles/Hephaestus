@@ -1,10 +1,9 @@
 ﻿using System;
 using System.IO;
-using HephaestusCommon.Classes;
-using HephaestusCommon.Classes.Exceptions;
+using Hephaestus.Common.Classes;
 using Newtonsoft.Json;
 
-namespace HephaestusCommon.Utilities
+namespace Hephaestus.Common.Utilities
 {
     public static class ProjectUtility
     {
@@ -26,7 +25,7 @@ namespace HephaestusCommon.Utilities
 
             return File.Exists(jsonPath)
                 ? JsonConvert.DeserializeObject<Project>(File.ReadAllText(jsonPath))
-                : throw new ProjectDoesNotExistException();
+                : null;
         }
 
         public static void SetProject(string path, Project project)

@@ -11,18 +11,15 @@ namespace Hephaestus.Utilities
             while (true)
             {
                 Console.WriteLine($"{question} (Y/N)");
-                ConsoleKey key = Console.ReadKey().Key;
-
-                // Add some spacing because Console.ReadKey() does not terminate the line
-                Console.WriteLine();
-
-                if (key == ConsoleKey.Y)
+                string key = Console.ReadLine()?.ToLower();
+                
+                if (key == "y")
                 {
                     result = true;
                     break;
                 }
 
-                if (key == ConsoleKey.N)
+                if (key == "n")
                 {
                     result = false;
                     break;

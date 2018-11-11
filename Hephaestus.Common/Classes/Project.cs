@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using HephaestusCommon.Utilities;
+using Hephaestus.Common.Utilities;
 
-namespace HephaestusCommon.Classes
+namespace Hephaestus.Common.Classes
 {
     public class Project
     {

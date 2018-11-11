@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace HephaestusCommon.Classes
+namespace Hephaestus.Common.Classes
 {
     public class Hash
     {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace HephaestusConfigurator.Properties {
+namespace Hephaestus.Configurator.Properties {
     using System;
     
     

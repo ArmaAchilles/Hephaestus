@@ -1,7 +1,7 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 
-namespace HephaestusCommon.Utilities
+namespace Hephaestus.Configurator.Utilities
 {
     public static class RegistryUtility
     {
