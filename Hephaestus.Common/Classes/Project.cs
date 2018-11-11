@@ -10,9 +10,9 @@ namespace Hephaestus.Common.Classes
         {
         }
 
-        public Project(string projectDirectory, string sourceDirectory, string targetDirectory,
-            string addonBuilderFile, string projectPrefix, string privateKeyFile,
-            Game game, bool shutdownGameBeforeBuilding, bool startGameAfterBuilding)
+        public Project(string projectDirectory, string sourceDirectory, string targetDirectory, string addonBuilderFile,
+            string projectPrefix, string privateKeyFile, Game game, bool shutdownGameBeforeBuilding,
+            bool startGameAfterBuilding, bool useArmake)
         {
             ProjectDirectory = projectDirectory;
             SourceDirectory = sourceDirectory;
@@ -23,6 +23,7 @@ namespace Hephaestus.Common.Classes
             Game = game;
             ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
             StartGameAfterBuilding = startGameAfterBuilding;
+            UseArmake = useArmake;
         }
 
         public string ProjectDirectory { get; set; }

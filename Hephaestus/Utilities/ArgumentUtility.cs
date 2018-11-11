@@ -88,8 +88,7 @@ namespace Hephaestus.Utilities
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 Arguments = path,
-                // TODO: Create key in HephaestusInstaller
-                FileName = Path.Combine(path, "HephaestusConfigurator.exe")
+                FileName = Path.Combine(path, "Hephaestus.Configurator.exe")
             };
 
             Process.Start(processStartInfo);
@@ -148,10 +147,11 @@ namespace Hephaestus.Utilities
 
             bool shutdownGameBeforeBuilding = ConsoleUtility.AskYesNoQuestion("Shutdown game before building?");
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
+            bool useArmake = ConsoleUtility.AskYesNoQuestion("Use Armake to build?");
             
             Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
                 privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,
-                startGameAfterBuilding);
+                startGameAfterBuilding, useArmake);
             
             project.Save();
             

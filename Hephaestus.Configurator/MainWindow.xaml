@@ -6,7 +6,7 @@
         NonActiveWindowTitleBrush="#561D25"
         BorderBrush="#561D25"
         NonActiveBorderBrush="#561D25"
-        Title="Hephaestus Configurator" Height="450" Width="650">
+        Title="Hephaestus Configurator" Height="750" Width="650">
     
     <controls:MetroWindow.IconTemplate>
         <DataTemplate>
@@ -40,6 +40,7 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
             <Label Content="Project Directory" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="98"/>
@@ -62,7 +63,7 @@
 
             <Label Content="Addon Builder File" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
             <TextBox x:Name="TextBoxAddonBuilderFile" HorizontalAlignment="Stretch" Grid.Row="3" Grid.Column="0" Height="26" Margin="10,36,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
-            <Button Content="Select" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_addonBuilderFile_Click"/>
+            <Button x:Name="ButtonAddonBuilderFile" Content="Select" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_addonBuilderFile_Click"/>
 
 
             <Label Content="Project Prefix" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="140"/>
@@ -84,8 +85,9 @@
             
             <CheckBox x:Name="CheckboxShutdownGameBeforeBuilding" Content="Shutdown Game Before Building" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
             <CheckBox x:Name="CheckboxStartGameAfterBuilding" Content="Start Game After Building" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
+            <CheckBox x:Name="CheckboxUseArmake" Content="Use Armake" Grid.Row="10" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204" Checked="CheckboxUseArmake_OnChecked" Unchecked="CheckboxUseArmake_OnUnchecked"/>
 
-            <Button Content="Save Settings" Grid.Row="10" Grid.ColumnSpan="2" Grid.Column="0"
+            <Button Content="Save Settings" Grid.Row="11" Grid.ColumnSpan="2" Grid.Column="0"
                     Click="button_saveSettings_Click" />
         </Grid>
     </ScrollViewer>

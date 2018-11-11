@@ -80,7 +80,9 @@ namespace Hephaestus.Configurator
                 TextBoxPrivateKeyFile.Text,
                 new Game(TextBoxGameExecutable.Text, TextBoxGameExecutableArguments.Text), 
                 CheckboxShutdownGameBeforeBuilding.IsChecked ?? false,
-                CheckboxStartGameAfterBuilding.IsChecked ?? false);
+                CheckboxStartGameAfterBuilding.IsChecked ?? false,
+                CheckboxUseArmake.IsChecked ?? false
+            );
 
             project.Save();
 
@@ -139,6 +141,7 @@ namespace Hephaestus.Configurator
             TextBoxGameExecutableArguments.Text = project.Game.GameExecutableArguments;
             CheckboxShutdownGameBeforeBuilding.IsChecked = project.ShutdownGameBeforeBuilding;
             CheckboxStartGameAfterBuilding.IsChecked = project.StartGameAfterBuilding;
+            CheckboxUseArmake.IsChecked = project.UseArmake;
         }
 
         private void ComboBoxProjectDirectory_OnLoaded(object sender, RoutedEventArgs e)
@@ -158,6 +161,18 @@ namespace Hephaestus.Configurator
             ComboBoxProjectDirectory.Text = arguments[1];
                 
             LoadAllFields();
+        }
+
+        private void CheckboxUseArmake_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAddonBuilderFile.IsEnabled = false;
+            ButtonAddonBuilderFile.IsEnabled = false;
+        }
+
+        private void CheckboxUseArmake_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            TextBoxAddonBuilderFile.IsEnabled = true;
+            ButtonAddonBuilderFile.IsEnabled = true;
         }
     }
 }
