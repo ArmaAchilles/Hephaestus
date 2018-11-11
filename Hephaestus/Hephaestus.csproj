@@ -3,6 +3,21 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
+        <Deterministic>False</Deterministic>
+        <ApplicationIcon>Resources\AchillesLogo.ico</ApplicationIcon>
+        <Authors>ArmaAchilles</Authors>
+        <Company />
+        <Description>Application that is a wrapper around Bohemia Interactive's AddonBuilder or KoffeinFlummi's Armake to build PBOs for BI's game titles.</Description>
+        <Copyright>Copyright © ArmaAchilles 2018</Copyright>
+        <PackageLicenseUrl>https://github.com/ArmaAchilles/Hephaestus/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ArmaAchilles/Hephaestus</PackageProjectUrl>
+        <PackageIconUrl>https://github.com/ArmaAchilles/Achilles/blob/master/Pictures/logo/achilles_logo_transparentBackground.png?raw=true</PackageIconUrl>
+        <RepositoryUrl>https://github.com/ArmaAchilles/Hephaestus</RepositoryUrl>
+        <NeutralLanguage>en</NeutralLanguage>
+        <AssemblyVersion>2.0.1.*</AssemblyVersion>
+        <FileVersion>2.0.1.0</FileVersion>
+        <Version>2.0.1.0</Version>
+        <RepositoryType>GitHub</RepositoryType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,6 +30,9 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="Libraries\armake_w64.exe">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Hephaestus.AddonBuilderIncludes.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>

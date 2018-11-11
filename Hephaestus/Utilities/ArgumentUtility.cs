@@ -88,7 +88,7 @@ namespace Hephaestus.Utilities
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
                 Arguments = path,
-                FileName = Path.Combine(path, "Hephaestus.Configurator.exe")
+                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hephaestus.Configurator.exe")
             };
 
             Process.Start(processStartInfo);
@@ -123,10 +123,16 @@ namespace Hephaestus.Utilities
                 throw new DirectoryNotFoundException($"{targetDirectory} does not exist.");
             }
             
-            string addonBuilderFile = ConsoleUtility.AskToEnterString("Addon Builder file path");
-            if (! File.Exists(addonBuilderFile))
+            bool useArmake = ConsoleUtility.AskYesNoQuestion("Use Armake to build?");
+            
+            string addonBuilderFile = null;
+            if (! useArmake)
             {
-                throw new FileNotFoundException($"{addonBuilderFile} file does not exist.");
+                addonBuilderFile = ConsoleUtility.AskToEnterString("Addon Builder file path");
+                if (! File.Exists(addonBuilderFile))
+                {
+                    throw new FileNotFoundException($"{addonBuilderFile} file does not exist.");
+                }
             }
 
             string projectPrefix = ConsoleUtility.AskToEnterString("Project prefix");
@@ -147,7 +153,6 @@ namespace Hephaestus.Utilities
 
             bool shutdownGameBeforeBuilding = ConsoleUtility.AskYesNoQuestion("Shutdown game before building?");
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
-            bool useArmake = ConsoleUtility.AskYesNoQuestion("Use Armake to build?");
             
             Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
                 privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,

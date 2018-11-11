@@ -2,6 +2,19 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <Deterministic>False</Deterministic>
+        <ApplicationIcon>Resources\AchillesLogo.ico</ApplicationIcon>
+        <Authors>ArmaAchilles</Authors>
+        <Description>Shared library for Hephaestus.</Description>
+        <Copyright>Copyright © ArmaAchilles 2018</Copyright>
+        <PackageLicenseUrl>https://github.com/ArmaAchilles/Hephaestus/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/ArmaAchilles/Hephaestus</PackageProjectUrl>
+        <PackageIconUrl>https://github.com/ArmaAchilles/Achilles/blob/master/Pictures/logo/achilles_logo_transparentBackground.png?raw=true</PackageIconUrl>
+        <RepositoryUrl>https://github.com/ArmaAchilles/Hephaestus</RepositoryUrl>
+        <RepositoryType>GitHub</RepositoryType>
+        <NeutralLanguage />
+        <AssemblyVersion>1.0.0.*</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
