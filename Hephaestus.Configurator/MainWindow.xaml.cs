@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Hephaestus.Configurator.Utilities;
 using Hephaestus.Common.Utilities;
 using Hephaestus.Common.Classes;
+using Hephaestus.Configurator.Classes;
 
 namespace Hephaestus.Configurator
 {
@@ -20,14 +24,15 @@ namespace Hephaestus.Configurator
 
         private void comboBox_projectDirectory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (Equals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew))
+            if (ReferenceEquals(ComboBoxProjectDirectory.SelectedItem, ComboBoxProjectDirectoryAddNew))
             {
+                ComboBoxProjectDirectory.SelectedItem = null;
                 AddProjectDirectoryToComboBox(DialogUtility.OpenFileDialogToSelectFolder());
             }
         }
 
         private void button_projectDirectory_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             AddProjectDirectoryToComboBox(DialogUtility.OpenFileDialogToSelectFolder());
             
             LoadAllFields();
@@ -85,6 +90,16 @@ namespace Hephaestus.Configurator
             );
 
             project.Save();
+
+            List<string> projectDirectories = ComboBoxProjectDirectory.Items.Cast<ComboBoxItem>()
+                .Select(comboBoxItem => comboBoxItem.Content.ToString())
+                .Where(projectDirectory => projectDirectory != "System.Windows.Controls.StackPanel").ToList();
+
+            Master master = new Master(
+                projectDirectories
+            );
+            
+            master.Save();
 
             MessageBox.Show("Hephaestus Project Saved!", "Hephaestus Configurator", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -146,10 +161,21 @@ namespace Hephaestus.Configurator
 
         private void ComboBoxProjectDirectory_OnLoaded(object sender, RoutedEventArgs e)
         {
+            List<string> projectDirectories = new Master().Get().ProjectDirectories;
+
+            if (projectDirectories != null)
+            {
+                foreach (string projectDirectory in projectDirectories)
+                {
+                    AddProjectDirectoryToComboBox(projectDirectory);
+                }
+            }
+            
             string[] arguments = Environment.GetCommandLineArgs();
 
             if (arguments.Length <= 1)
             {
+                LoadAllFields();
                 return;
             }
 

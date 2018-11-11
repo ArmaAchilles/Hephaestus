@@ -6,7 +6,7 @@
         NonActiveWindowTitleBrush="#561D25"
         BorderBrush="#561D25"
         NonActiveBorderBrush="#561D25"
-        Title="Hephaestus Configurator" Height="750" Width="650">
+        Title="Hephaestus Configurator" Height="800" Width="650">
     
     <controls:MetroWindow.IconTemplate>
         <DataTemplate>
@@ -81,7 +81,7 @@
             <Button Content="Select" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,36,5,0" VerticalAlignment="Top" Height="26" Click="button_gameExecutable_Click"/>
 
             <Label Content="Game Executable Arguments" Grid.Row="7" Grid.Column="0" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="26" Width="164"/>
-            <TextBox x:Name="TextBoxGameExecutableArguments" HorizontalAlignment="Stretch" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Height="26" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+            <TextBox x:Name="TextBoxGameExecutableArguments" HorizontalAlignment="Stretch" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Height="78" VerticalScrollBarVisibility="Auto" Margin="10,36,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
             
             <CheckBox x:Name="CheckboxShutdownGameBeforeBuilding" Content="Shutdown Game Before Building" Grid.Row="8" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
             <CheckBox x:Name="CheckboxStartGameAfterBuilding" Content="Start Game After Building" Grid.Row="9" Grid.Column="0" HorizontalAlignment="Left" Grid.ColumnSpan="2" Margin="13,20,0,23" Width="204"/>
