@@ -39,5 +39,20 @@ namespace Hephaestus.Utilities
 
             return enteredString;
         }
+
+        public static void Error(string message)
+        {
+            Console.Error.WriteLine($"error: {message}");
+        }
+
+        public static void Warning(string message)
+        {
+            Console.WriteLine($"warning: {message}");
+        }
+
+        public static void Info(string message)
+        {
+            Console.WriteLine($"info: {message}");
+        }
     }
 }

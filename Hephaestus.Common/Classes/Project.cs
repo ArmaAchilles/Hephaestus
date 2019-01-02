@@ -10,28 +10,25 @@ namespace Hephaestus.Common.Classes
         {
         }
 
-        public Project(string projectDirectory, string sourceDirectory, string targetDirectory, string addonBuilderFile,
-            string projectPrefix, string privateKeyFile, Game game, bool shutdownGameBeforeBuilding,
-            bool startGameAfterBuilding, bool useArmake)
+        public Project(string projectDirectory, string sourceDirectory, string targetDirectory, string projectPrefix, string privateKeyFile, Game game, bool shutdownGameBeforeBuilding, bool startGameAfterBuilding, Dictionary<string, Hash> hashes, string selectedDriver, List<Driver> drivers)
         {
             ProjectDirectory = projectDirectory;
             SourceDirectory = sourceDirectory;
             TargetDirectory = targetDirectory;
-            AddonBuilderFile = addonBuilderFile;
             ProjectPrefix = projectPrefix;
             PrivateKeyFile = privateKeyFile;
             Game = game;
             ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
             StartGameAfterBuilding = startGameAfterBuilding;
-            UseArmake = useArmake;
+            Hashes = hashes;
+            SelectedDriver = selectedDriver;
+            Drivers = drivers;
         }
 
         public string ProjectDirectory { get; set; }
 
         public string SourceDirectory { get; set; }
         public string TargetDirectory { get; set; }
-
-        public string AddonBuilderFile { get; set; }
 
         public string ProjectPrefix { get; set; }
 
@@ -42,10 +39,12 @@ namespace Hephaestus.Common.Classes
         public bool ShutdownGameBeforeBuilding { get; set; }
         public bool StartGameAfterBuilding { get; set; }
         
-        public bool UseArmake { get; set; }
-
         // Directory name, SHA1
         public Dictionary<string, Hash> Hashes { get; set; }
+        
+        public string SelectedDriver { get; set; }
+
+        public List<Driver> Drivers { get; set; }
 
         public void Save()
         {

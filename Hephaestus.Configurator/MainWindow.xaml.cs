@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Hephaestus.Configurator.Utilities;
-using Hephaestus.Common.Utilities;
 using Hephaestus.Common.Classes;
+using Hephaestus.Common.Utilities;
 using Hephaestus.Configurator.Classes;
+using Hephaestus.Configurator.Utilities;
 
 namespace Hephaestus.Configurator
 {
@@ -76,20 +75,20 @@ namespace Hephaestus.Configurator
         {
             string path = ComboBoxProjectDirectory.Text;
 
-            Project project = new Project(
-                path,
-                TextBoxSourceDirectory.Text,
-                TextBoxTargetDirectory.Text,
-                TextBoxAddonBuilderFile.Text,
-                TextBoxProjectPrefix.Text,
-                TextBoxPrivateKeyFile.Text,
-                new Game(TextBoxGameExecutable.Text, TextBoxGameExecutableArguments.Text), 
-                CheckboxShutdownGameBeforeBuilding.IsChecked ?? false,
-                CheckboxStartGameAfterBuilding.IsChecked ?? false,
-                CheckboxUseArmake.IsChecked ?? false
-            );
+//            Project project = new Project(
+//                path,
+//                TextBoxSourceDirectory.Text,
+//                TextBoxTargetDirectory.Text,
+//                TextBoxAddonBuilderFile.Text,
+//                TextBoxProjectPrefix.Text,
+//                TextBoxPrivateKeyFile.Text,
+//                new Game(TextBoxGameExecutable.Text, TextBoxGameExecutableArguments.Text), 
+//                CheckboxShutdownGameBeforeBuilding.IsChecked ?? false,
+//                CheckboxStartGameAfterBuilding.IsChecked ?? false,
+//                CheckboxUseArmake.IsChecked ?? false
+//            );
 
-            project.Save();
+//            project.Save();
 
             List<string> projectDirectories = ComboBoxProjectDirectory.Items.Cast<ComboBoxItem>()
                 .Select(comboBoxItem => comboBoxItem.Content.ToString())
@@ -149,14 +148,12 @@ namespace Hephaestus.Configurator
             
             TextBoxSourceDirectory.Text = project.SourceDirectory;
             TextBoxTargetDirectory.Text = project.TargetDirectory;
-            TextBoxAddonBuilderFile.Text = project.AddonBuilderFile;
             TextBoxProjectPrefix.Text = project.ProjectPrefix;
             TextBoxPrivateKeyFile.Text = project.PrivateKeyFile;
             TextBoxGameExecutable.Text = project.Game.GameExecutable;
             TextBoxGameExecutableArguments.Text = project.Game.GameExecutableArguments;
             CheckboxShutdownGameBeforeBuilding.IsChecked = project.ShutdownGameBeforeBuilding;
             CheckboxStartGameAfterBuilding.IsChecked = project.StartGameAfterBuilding;
-            CheckboxUseArmake.IsChecked = project.UseArmake;
         }
 
         private void ComboBoxProjectDirectory_OnLoaded(object sender, RoutedEventArgs e)

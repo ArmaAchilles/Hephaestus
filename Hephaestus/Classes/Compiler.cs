@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Hephaestus.Classes.Builders.Configurations;
 using Hephaestus.Common.Classes;
 using Hephaestus.Utilities;
 
@@ -40,7 +39,7 @@ namespace Hephaestus.Classes
                 string[] sourceCodeDirectories = GetSourceCodeDirectories(project.SourceDirectory);
                 SourceCodeDirectoryCount = sourceCodeDirectories.Length;
 
-                Console.WriteLine($"info: Found {SourceCodeDirectoryCount} source code directories");
+                ConsoleUtility.Info($"Found {SourceCodeDirectoryCount} source code directories");
 
                 if (project.Hashes == null)
                 {
@@ -64,7 +63,7 @@ namespace Hephaestus.Classes
                             if (selectedHash.Sha1 == hash.Sha1)
                             {
                                 NotBuiltDirectories++;
-                                Console.WriteLine($"info: Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
+                                ConsoleUtility.Info($"Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
                             }
                             else
                             {
@@ -120,24 +119,14 @@ namespace Hephaestus.Classes
         {
             LaunchedAddonBuilders++;
 
-            Console.WriteLine(
-                $"info: Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
-            if (project.UseArmake)
-            {
-                Armake armake = new Armake(sourceCodeDirectory, project);
+            ConsoleUtility.Info(
+                $"Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
 
-                armake.Process.Exited += (sender, eventArgs) =>
-                    OnBuilderExit(sourceCodeDirectory, armake.Process.ExitCode,
-                        armake.Process.StartTime, armake.Process.ExitTime, project);
-            }
-            else
-            {
-                AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
-
-                addonBuilder.Process.Exited += (sender, eventArgs) =>
-                    OnBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode,
-                        addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime, project);
-            }
+            Builder builder = new Builder(sourceCodeDirectory, project);
+            
+            builder.Process.Exited += (sender, eventArgs) =>
+                OnBuilderExit(sourceCodeDirectory, builder.Process.ExitCode,
+                    builder.Process.StartTime, builder.Process.ExitTime, project);
         }
 
         private static readonly object OnBuilderExitLock = new object();
@@ -154,16 +143,16 @@ namespace Hephaestus.Classes
                 {
                     double timeToBuild = Math.Round((exitTime - startTime).TotalSeconds, 3);
                     
-                    Console.WriteLine(
-                        $"info: Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
+                    ConsoleUtility.Info(
+                        $"Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
                             + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
                     
                     project.Hashes[sourceCodeDirectory].Sha1 = new Hash(sourceCodeDirectory).Sha1;
                 }
                 else
                 {
-                    Console.Error.WriteLine(
-                        $"error: Failed to build {Path.GetFileName(sourceCodeDirectory)}. Exit code {exitCode}");
+                    ConsoleUtility.Error(
+                        $"Failed to build {Path.GetFileName(sourceCodeDirectory)}. Exit code {exitCode}");
                 }
             }
         }

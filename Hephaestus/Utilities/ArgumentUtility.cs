@@ -1,9 +1,8 @@
-﻿using Hephaestus.Common.Utilities;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using Hephaestus.Common.Classes;
+using Hephaestus.Common.Utilities;
 
 namespace Hephaestus.Utilities
 {
@@ -154,11 +153,11 @@ namespace Hephaestus.Utilities
             bool shutdownGameBeforeBuilding = ConsoleUtility.AskYesNoQuestion("Shutdown game before building?");
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
             
-            Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
-                privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,
-                startGameAfterBuilding, useArmake);
+//            Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
+//                privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,
+//                startGameAfterBuilding, useArmake);
             
-            project.Save();
+//            project.Save();
             
             Console.WriteLine("Hephaestus project initialized. Run 'hephaestus' to launch Hephaestus.");
             Environment.Exit(0);
