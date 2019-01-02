@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using Hephaestus.Classes.Builders;
+using Hephaestus.Classes.Builders.Configurations;
 using Hephaestus.Common.Classes;
 using Hephaestus.Utilities;
 
 namespace Hephaestus.Classes
 {
-    public static class Builder
+    public static class Compiler
     {
         private static readonly List<int> ExitCodes = new List<int>();
         private static int SourceCodeDirectoryCount { get; set; }

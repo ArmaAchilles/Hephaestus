@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
+using Hephaestus.Classes;
+using Hephaestus.Common.Classes;
 using Hephaestus.Common.Utilities;
 using Hephaestus.Utilities;
-using Hephaestus.Common.Classes;
-using Hephaestus.Classes;
 
 namespace Hephaestus
 {
@@ -28,7 +27,7 @@ namespace Hephaestus
                 Environment.Exit(1);
             }
             
-            int exitCode = Builder.Build(project, ForceBuild);
+            int exitCode = Compiler.Build(project, ForceBuild);
     
             Environment.Exit(exitCode);
         }
