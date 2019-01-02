@@ -4,8 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Hephaestus.Classes.Builders;
-using Hephaestus.Utilities;
 using Hephaestus.Common.Classes;
+using Hephaestus.Utilities;
 
 namespace Hephaestus.Classes
 {
@@ -103,7 +103,9 @@ namespace Hephaestus.Classes
                         {
                             return exitCode;
                         }
-                        
+
+                        forceBuild = true;
+
                         continue;
                     }
 
@@ -118,7 +120,8 @@ namespace Hephaestus.Classes
         {
             LaunchedAddonBuilders++;
 
-            Console.WriteLine($"info: Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
+            Console.WriteLine(
+                $"info: Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
             if (project.UseArmake)
             {
                 Armake armake = new Armake(sourceCodeDirectory, project);
