@@ -10,7 +10,7 @@ namespace Hephaestus.Common.Classes
         {
         }
 
-        public Project(string projectDirectory, string sourceDirectory, string targetDirectory, string projectPrefix, string privateKeyFile, Game game, bool shutdownGameBeforeBuilding, bool startGameAfterBuilding, Dictionary<string, Hash> hashes, string selectedDriver, List<Driver> drivers)
+        public Project(string projectDirectory, string sourceDirectory, string targetDirectory, string projectPrefix, string privateKeyFile, Game game, bool shutdownGameBeforeBuilding, bool startGameAfterBuilding, string selectedDriver, List<Driver> drivers)
         {
             ProjectDirectory = projectDirectory;
             SourceDirectory = sourceDirectory;
@@ -20,7 +20,6 @@ namespace Hephaestus.Common.Classes
             Game = game;
             ShutdownGameBeforeBuilding = shutdownGameBeforeBuilding;
             StartGameAfterBuilding = startGameAfterBuilding;
-            Hashes = hashes;
             SelectedDriver = selectedDriver;
             Drivers = drivers;
         }
