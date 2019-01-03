@@ -44,18 +44,6 @@ namespace Hephaestus.Classes
 
                     EnableRaisingEvents = true
                 };
-                
-                /*
-                 * "$SOURCE_DIR_FULL$" "$TARGET_DIR_FULL$"
-                 * -prefix="$PROJECT_PREFIX$\$SOURCE_DIR_NAME$"
-                 * -temp="$TEMP_DIR_FULL$\$PROJECT_PREFIX$"
-                 * -include="$HEPHAESTUS_DIR_FULL$\Hephaestus.AddonBuilderIncludes.txt"
-                 * -binarizeFullLogs
-                 */
-                
-                /*
-                 * build -f -k "$PRIVATE_KEY_FULL$" -w unquoted-string "$SOURCE_DIR_FULL$" "$TARGET_DIR_FULL$\$SOURCE_DIR_NAME$.pbo"
-                 */
 
                 process.Start();
                 
