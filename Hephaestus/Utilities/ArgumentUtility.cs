@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using Hephaestus.Common.Classes;
 using Hephaestus.Common.Utilities;
 
 namespace Hephaestus.Utilities
@@ -104,60 +106,81 @@ namespace Hephaestus.Utilities
 
         private static void InitFromCommandLineCommand()
         {
-            string projectDirectory = ConsoleUtility.AskToEnterString("Project directory");
-            if (! Directory.Exists(projectDirectory))
-            {
-                throw new DirectoryNotFoundException($"{projectDirectory} does not exist.");
-            }
-
-            string sourceDirectory = ConsoleUtility.AskToEnterString("Source directory");
-            if (! Directory.Exists(sourceDirectory))
-            {
-                throw new DirectoryNotFoundException($"{sourceDirectory} does not exist.");
-            }
-
-            string targetDirectory = ConsoleUtility.AskToEnterString("Target directory");
-            if (! Directory.Exists(targetDirectory))
-            {
-                throw new DirectoryNotFoundException($"{targetDirectory} does not exist.");
-            }
+            string projectDirectory = Environment.CurrentDirectory;
             
-            bool useArmake = ConsoleUtility.AskYesNoQuestion("Use Armake to build?");
-            
-            string addonBuilderFile = null;
-            if (! useArmake)
-            {
-                addonBuilderFile = ConsoleUtility.AskToEnterString("Addon Builder file path");
-                if (! File.Exists(addonBuilderFile))
-                {
-                    throw new FileNotFoundException($"{addonBuilderFile} file does not exist.");
-                }
-            }
+            string sourceDirectory = ConsoleUtility.AskToEnterPath("Source directory", PathType.Directory);
+            string targetDirectory = ConsoleUtility.AskToEnterPath("Target directory", PathType.Directory);
 
             string projectPrefix = ConsoleUtility.AskToEnterString("Project prefix");
 
-            string privateKeyFile = ConsoleUtility.AskToEnterString("Private key file path");
-            if (! File.Exists(privateKeyFile))
-            {
-                throw new FileNotFoundException($"{privateKeyFile} file does not exist.");
-            }
+            string privateKeyFile = ConsoleUtility.AskToEnterPath("Private key file", PathType.File);
 
-            string gameExecutable = ConsoleUtility.AskToEnterString("Game executable file path");
-            if (! File.Exists(gameExecutable))
-            {
-                throw new FileNotFoundException($"{gameExecutable} file does not exist.");
-            }
-
+            string gameExecutable = ConsoleUtility.AskToEnterPath("Game executable", PathType.File);
             string gameExecutableArguments = ConsoleUtility.AskToEnterString("Game executable arguments");
+            Game game = new Game(gameExecutable, gameExecutableArguments);
 
             bool shutdownGameBeforeBuilding = ConsoleUtility.AskYesNoQuestion("Shutdown game before building?");
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
+
+            List<Driver> drivers = new List<Driver>();
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                if (ConsoleUtility.AskYesNoQuestion("Do you want to use AddonBuilder?"))
+                {
+                    string addonBuilderPath = ConsoleUtility.AskToEnterPath("Addon Builder executable", PathType.File);
+                    
+                    Driver addonBuilderDriver = new Driver(
+                        "AddonBuilder",
+                        addonBuilderPath,
+                        "\"$SOURCE_DIR_FULL$\" \"$TARGET_DIR_FULL$\" -prefix=\"$PROJECT_PREFIX$\\$SOURCE_DIR_NAME$\" -temp=\"$TEMP_DIR_FULL$\\$PROJECT_PREFIX$\" -include=\"$HEPHAESTUS_DIR_FULL$\\Hephaestus.AddonBuilderIncludes.txt\" -binarizeFullLogs"
+                    );
+                    
+                    drivers.Add(addonBuilderDriver);
+                }
+            }
+
+            string armakeExecutable;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                armakeExecutable = Environment.Is64BitOperatingSystem ? "armake_w64.exe" : "armake_w32.exe";
+            }
+            else
+            {
+                armakeExecutable = "armake";
+            }
             
-//            Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, addonBuilderFile, projectPrefix,
-//                privateKeyFile, new Game(gameExecutable, gameExecutableArguments), shutdownGameBeforeBuilding,
-//                startGameAfterBuilding, useArmake);
+            Driver armakeDriver = new Driver(
+                "Armake",
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Libraries", armakeExecutable),
+                "build -f -k \"$PRIVATE_KEY_FULL$\" -w unquoted-string \"$SOURCE_DIR_PATH$\" \"$TARGET_DIR_FULL$\\$SOURCE_DIR_NAME$.pbo\""
+            );
             
-//            project.Save();
+            drivers.Add(armakeDriver);
+
+            if (ConsoleUtility.AskYesNoQuestion("Do you want to add a custom driver?"))
+            {
+                while (true)
+                {
+                    string driverName = ConsoleUtility.AskToEnterString("Driver name");
+                    string driverPath = ConsoleUtility.AskToEnterPath("Driver executable path", PathType.File);
+                    string driverArguments = ConsoleUtility.AskToEnterString("Driver arguments");
+                    
+                    Driver customDriver = new Driver(driverName, driverPath, driverArguments);
+                    
+                    drivers.Add(customDriver);
+
+                    if (! ConsoleUtility.AskYesNoQuestion("Do you want to add another custom driver?"))
+                        break;
+                }
+            }
+            
+            string selectedDriver = ConsoleUtility.AskToEnterString("Driver to use");
+            
+            Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, projectPrefix, privateKeyFile, game,
+                shutdownGameBeforeBuilding, startGameAfterBuilding, selectedDriver, drivers);
+            
+            project.Save();
             
             Console.WriteLine("Hephaestus project initialized. Run 'hephaestus' to launch Hephaestus.");
             Environment.Exit(0);

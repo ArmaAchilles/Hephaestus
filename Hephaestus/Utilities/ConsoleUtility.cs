@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using Hephaestus.Common.Classes;
 
 namespace Hephaestus.Utilities
 {
@@ -10,7 +12,7 @@ namespace Hephaestus.Utilities
             
             while (true)
             {
-                Console.WriteLine($"{question} (Y/N)");
+                Console.Write($"{question} (Y/N): ");
                 string key = Console.ReadLine()?.ToLower();
                 
                 if (key == "y")
@@ -33,9 +35,41 @@ namespace Hephaestus.Utilities
 
         public static string AskToEnterString(string message)
         {
-            Console.WriteLine($"{message}: ");
+            Console.Write($"{message}: ");
 
             string enteredString = Console.ReadLine();
+
+            return enteredString;
+        }
+
+        public static string AskToEnterPath(string message, PathType pathType)
+        {
+            string enteredString;
+            while (true)
+            {
+                Console.Write($"{message}: ");
+                
+                enteredString = Console.ReadLine();
+
+                if (pathType == PathType.Directory)
+                {
+                    if (Directory.Exists(enteredString))
+                    {
+                        break;
+                    }
+    
+                    Console.WriteLine("That is not a valid directory. Try again.");
+                }
+                else
+                {
+                    if (File.Exists(enteredString))
+                    {
+                        break;
+                    }
+
+                    Console.WriteLine("That is not a valid file. Try again.");
+                }
+            }
 
             return enteredString;
         }
