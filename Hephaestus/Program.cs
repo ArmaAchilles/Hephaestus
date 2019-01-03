@@ -12,13 +12,11 @@ namespace Hephaestus
         
         public static void Main(string[] arguments)
         {
-            string path = Environment.CurrentDirectory;
-
             // Handle any passed commands (arguments)
             ArgumentUtility.Handle(arguments);
 
             // Get the project data (if exists)
-            Project project = ProjectUtility.GetProject(path);
+            Project project = ProjectUtility.GetProject(Environment.CurrentDirectory);
 
             if (project == null)
             {
