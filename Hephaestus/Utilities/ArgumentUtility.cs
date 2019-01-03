@@ -10,13 +10,20 @@ namespace Hephaestus.Utilities
 {
     public static class ArgumentUtility
     {
+        /// <summary>
+        /// Handles all the available arguments that can be passed in the command line.
+        /// e.g. 'hephaestus init', 'hephaestus help', etc.
+        /// </summary>
+        /// <param name="arguments">Arguments that should be processed.</param>
         internal static void Handle(string[] arguments)
         {
+            // In case no arguments were given, then return back to Program class.
             if (arguments.Length != 1)
             {
                 return;
             }
             
+            // Compare the given string in the array for any commands that are available.
             switch (arguments[0])
             {
                 case "help":
@@ -49,9 +56,12 @@ namespace Hephaestus.Utilities
             }
         }
 
+        /// <summary>
+        /// Displays the usage information.
+        /// </summary>
         private static void HelpCommand()
         {
-            Console.WriteLine("Available Hephaestus commands are:");
+            Console.WriteLine("Usage:");
             Console.WriteLine("    Launching with no commands will initiate building of your current project (if present).");
             Console.WriteLine("    init        Initiate a new Hephaestus project at your current CD location.");
             Console.WriteLine("    force       Force build a project ignoring all checksums.");
@@ -61,11 +71,15 @@ namespace Hephaestus.Utilities
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Creates .hephaestus.json file at the current CD location of the terminal.
+        /// </summary>
         private static void InitCommand()
         {
-            // Check if project file already exists
+            // Environment.CurrentDirectory returns from where Hephaestus is getting executed (not where Hephaestus.dll is located).
             string path = Environment.CurrentDirectory;
 
+            // If .hephaestus.json already exists then we exit.
             if (ProjectUtility.ProjectExists(path))
             {
                 Console.Error.WriteLine("A Hephaestus project is already initialized. Use 'hephaestus' to launch Hephaestus.");
@@ -73,22 +87,28 @@ namespace Hephaestus.Utilities
                 Environment.Exit(1);
             }
 
+            // If the user is not on a Windows machine, then we don't even ask if they want to use Hephaestus.Configurator
+            //    as it's only supported on Windows.
             if (! RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 InitFromCommandLineCommand();
                 return;
             }
             
+            // If the user is on a Windows machine then we ask if they want to use the command line.
             if (ConsoleUtility.AskYesNoQuestion("Use the command line?"))
             {
                 InitFromCommandLineCommand();
                 return;
             }
 
-            // Launch Hephaestus Configurator
+            // Launch Hephaestus.Configurator.
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
+                // We give Hephaestus.Configurator the current path (CD location of the terminal).
                 Arguments = path,
+                
+                // We open Hephaestus.Configurator from AppDomain.CurrentDomain.BaseDirectory which is the location where Hephaestus.dll is located at.
                 FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hephaestus.Configurator.exe")
             };
 
@@ -97,6 +117,9 @@ namespace Hephaestus.Utilities
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Display version information.
+        /// </summary>
         private static void VersionCommand()
         {
             Console.WriteLine(AssemblyUtility.GetVersion());
@@ -104,8 +127,12 @@ namespace Hephaestus.Utilities
             Environment.Exit(0);
         }
 
+        /// <summary>
+        /// Create .hephaestus.json from the command line.
+        /// </summary>
         private static void InitFromCommandLineCommand()
         {
+            // CD location of the terminal.
             string projectDirectory = Environment.CurrentDirectory;
             
             string sourceDirectory = ConsoleUtility.AskToEnterPath("Source directory", PathType.Directory);
@@ -122,8 +149,11 @@ namespace Hephaestus.Utilities
             bool shutdownGameBeforeBuilding = ConsoleUtility.AskYesNoQuestion("Shutdown game before building?");
             bool startGameAfterBuilding = ConsoleUtility.AskYesNoQuestion("Start game after building?");
 
+            // Create our list of drivers that we will fill with custom drivers (if selected) and base ones.
             List<Driver> drivers = new List<Driver>();
 
+            // If the user is on a Windows machine then we ask if they want to use BI's AddonBuilder.
+            // As BI's AddonBuilder only works on Windows machines, we don't display the prompt on other machines.
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 if (ConsoleUtility.AskYesNoQuestion("Do you want to use AddonBuilder?"))
@@ -133,6 +163,14 @@ namespace Hephaestus.Utilities
                     Driver addonBuilderDriver = new Driver(
                         "AddonBuilder",
                         addonBuilderPath,
+                        /*
+                         * Arguments for AddonBuilder:
+                         * 
+                         * "$SOURCE_DIR_FULL$" "$TARGET_DIR_FULL$"
+                         * -temp="$TEMP_DIR_FULL$\$PROJECT_PREFIX$"	
+                         * -include="$HEPHAESTUS_DIR_FULL$\Hephaestus.AddonBuilderIncludes.txt"
+                         * -binarizeFullLogs
+                         */
                         "\"$SOURCE_DIR_FULL$\" \"$TARGET_DIR_FULL$\" -prefix=\"$PROJECT_PREFIX$\\$SOURCE_DIR_NAME$\" -temp=\"$TEMP_DIR_FULL$\\$PROJECT_PREFIX$\" -include=\"$HEPHAESTUS_DIR_FULL$\\Hephaestus.AddonBuilderIncludes.txt\" -binarizeFullLogs"
                     );
                     
@@ -143,10 +181,12 @@ namespace Hephaestus.Utilities
             string armakeExecutable;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
+                // As Armake provides two different versions for 64-bit and 32-bit machines, we select the one needed without user interaction.
                 armakeExecutable = Environment.Is64BitOperatingSystem ? "armake_w64.exe" : "armake_w32.exe";
             }
             else
             {
+                // For Debian machines it's only 'armake'.
                 armakeExecutable = "armake";
             }
             
@@ -158,6 +198,7 @@ namespace Hephaestus.Utilities
             
             drivers.Add(armakeDriver);
 
+            // Ask if the user wants to add any custom drivers and loop until they say no.
             if (ConsoleUtility.AskYesNoQuestion("Do you want to add a custom driver?"))
             {
                 while (true)
@@ -175,11 +216,47 @@ namespace Hephaestus.Utilities
                 }
             }
             
-            string selectedDriver = ConsoleUtility.AskToEnterString("Driver to use");
-            
+            // Ask the user to select one driver from the given list.
+            Console.WriteLine("Select one driver by entering the displayed number.");
+            for (int i = 0; i < drivers.Count; i++)
+            {
+                Driver driver = drivers[i];
+
+                // As i is zero-based we increment it by for presentation.
+                Console.WriteLine($"{i + 1}. {driver.Name}");
+            }
+
+            string selectedDriver;
+            // Loop until the user selects a proper answer.
+            while (true)
+            {
+                string selectedDriverString = ConsoleUtility.AskToEnterString("Driver to use");
+
+                try
+                {
+                    // May return an exception if not an Int32.
+                    int selectedDriverNumber = Convert.ToInt32(selectedDriverString);
+                    
+                    // Decrement by one from selectedDriverNumber as we incremented it by one.
+                    selectedDriverNumber--;
+
+                    // Get the selected driver number.
+                    // May return an exception if out of bounds.
+                    selectedDriver = drivers[selectedDriverNumber].Name;
+
+                    break;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Incorrect selection. Try again.");
+                }
+            }
+
+            // Create our project from the given data.
             Project project = new Project(projectDirectory, sourceDirectory, targetDirectory, projectPrefix, privateKeyFile, game,
                 shutdownGameBeforeBuilding, startGameAfterBuilding, selectedDriver, drivers);
             
+            // Save our data to JSON.
             project.Save();
             
             Console.WriteLine("Hephaestus project initialized. Run 'hephaestus' to launch Hephaestus.");
