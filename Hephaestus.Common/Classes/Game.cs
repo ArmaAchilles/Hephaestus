@@ -7,8 +7,8 @@ namespace Hephaestus.Common.Classes
 {
     public class Game
     {
-        public string GameExecutable { get; set; }
-        public string GameExecutableArguments { get; set; }
+        public string GameExecutable { get; }
+        public string GameExecutableArguments { get; }
 
         public Game(string gameExecutable, string gameExecutableArguments)
         {
@@ -16,6 +16,10 @@ namespace Hephaestus.Common.Classes
             GameExecutableArguments = gameExecutableArguments;
         }
 
+        /// <summary>
+        /// Launch the game.
+        /// </summary>
+        /// <param name="game">Game data.</param>
         public static void Launch(Game game)
         {
             try
@@ -30,15 +34,23 @@ namespace Hephaestus.Common.Classes
             }
         }
 
+        /// <summary>
+        /// Close the process.
+        /// </summary>
+        /// <param name="processToShutdown">Process to terminate.</param>
         public static void Shutdown(string processToShutdown)
         {
+            // Get all processes running.
             Process[] allProcesses = Process.GetProcesses();
 
+            // Loop through each process.
             foreach (Process process in allProcesses)
             {
+                // Turn the process name into lowercase for any inconsistencies between naming.
                 string processName = process.ProcessName.ToLower();
 
-                if (processToShutdown == processName)
+                // If the process name doesn't match process to shutdown then we move on onto the next item in the loop.
+                if (processToShutdown != processName)
                 {
                     continue;
                 }
@@ -47,6 +59,7 @@ namespace Hephaestus.Common.Classes
 
                 try
                 {
+                    // Shutdown the process.
                     if (! process.HasExited)
                     {
                         process.CloseMainWindow();

@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using Hephaestus.Common.Utilities;
 
+// ReSharper disable AutoPropertyCanBeMadeGetOnly.Global | If set from properties are removed then JSON returns them as null/false.
+// ReSharper disable MemberCanBePrivate.Global | Same as above.
+
 namespace Hephaestus.Common.Classes
 {
     public class Project
@@ -45,6 +48,9 @@ namespace Hephaestus.Common.Classes
 
         public List<Driver> Drivers { get; set; }
 
+        /// <summary>
+        /// Save the current instance of this class to JSON.
+        /// </summary>
         public void Save()
         {
             ProjectUtility.SetProject(ProjectDirectory, this);

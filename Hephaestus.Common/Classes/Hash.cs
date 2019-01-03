@@ -20,6 +20,11 @@ namespace Hephaestus.Common.Classes
 
         public string Sha1 { get; set; }
 
+        /// <summary>
+        /// Loop through each file in the given directory and create a SHA1 checksum from all the files inside the directory combined.
+        /// </summary>
+        /// <param name="directory">The directory for which to return the SHA1 checksum.</param>
+        /// <returns>SHA1 checksum.</returns>
         private static string HashDirectory(string directory)
         {
             string[] files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories)
