@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Hephaestus.Common.Classes;
 
-namespace Hephaestus.Utilities
+namespace Hephaestus.Common.Utilities
 {
     public static class ConsoleUtility
     {

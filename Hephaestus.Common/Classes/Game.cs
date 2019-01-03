@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using Hephaestus.Common.Utilities;
 
 namespace Hephaestus.Common.Classes
 {
@@ -16,21 +16,21 @@ namespace Hephaestus.Common.Classes
             GameExecutableArguments = gameExecutableArguments;
         }
 
-        public static void Launch(string gameExecutable, string gameExecutableArguments)
+        public static void Launch(Game game)
         {
             try
             {
-                Console.WriteLine($"info: Starting {Path.GetFileName(gameExecutable)}");
+                ConsoleUtility.Info($"Starting {Path.GetFileName(game.GameExecutable)}");
                 
-                Process.Start(new ProcessStartInfo(gameExecutable, gameExecutableArguments));
+                Process.Start(new ProcessStartInfo(game.GameExecutable, game.GameExecutableArguments));
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"error: Failed to start {gameExecutable} because {e.Message}");
+                ConsoleUtility.Error($"Failed to start {game.GameExecutable} because {e.Message}");
             }
         }
 
-        public static void Shutdown(List<string> processesToShutdown)
+        public static void Shutdown(string processToShutdown)
         {
             Process[] allProcesses = Process.GetProcesses();
 
@@ -38,12 +38,12 @@ namespace Hephaestus.Common.Classes
             {
                 string processName = process.ProcessName.ToLower();
 
-                if (! processesToShutdown.Contains(processName))
+                if (processToShutdown == processName)
                 {
-                     continue;
+                    continue;
                 }
                 
-                Console.WriteLine($"info: Found {processName}. Terminating process...");
+                ConsoleUtility.Info($"Found {processName}. Terminating process...");
 
                 try
                 {
@@ -58,7 +58,7 @@ namespace Hephaestus.Common.Classes
                 }
                 catch (Exception e)
                 {
-                    Console.Error.WriteLine($"error: Failed to shutdown {process} because {e.Message}");
+                    ConsoleUtility.Error($"error: Failed to shutdown {process} because {e.Message}");
                 }
             }
         }

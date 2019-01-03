@@ -8,10 +8,15 @@ namespace Hephaestus.Classes
 {
     public class Builder
     {
-        public Process Process { get; set; }
-        private Project Project { get; set; }
-        private Driver Driver { get; set; }
+        public Process Process { get; private set; }
+        private Project Project { get; }
+        private Driver Driver { get; }
 
+        /// <summary>
+        /// Upon creation it automatically starts building a single folder with the currently selected driver.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
+        /// <param name="project">The current selected project's data.</param>
         public Builder(string sourceCodeDirectory, Project project)
         {
             Project = project;
@@ -20,6 +25,10 @@ namespace Hephaestus.Classes
             Build(sourceCodeDirectory);
         }
         
+        /// <summary>
+        /// Build a single source code directory.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
         private void Build(string sourceCodeDirectory)
         {
             try
@@ -47,44 +56,61 @@ namespace Hephaestus.Classes
 
                 process.Start();
                 
+                // Start listening for Console.Error outputs
                 process.BeginErrorReadLine();
                 
+                // If any Console.Error data has been received then call OnErrorDataReceived
                 process.ErrorDataReceived += (sender, args) => OnErrorDataReceived(args, sourceCodeDirectory);
 
                 Process = process;
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Builder failed to launch for {Path.GetFileName(sourceCodeDirectory)} because {e.Message}");
+                ConsoleUtility.Error($"Builder failed to launch for {Path.GetFileName(sourceCodeDirectory)} because {e.Message}");
             }
         }
 
+        /// <summary>
+        /// If any Console.Error stream data will be heard then log the received data to the console window.
+        /// </summary>
+        /// <param name="e">Event data from Console.Error stream.</param>
+        /// <param name="sourceCodeDirectory">The directory that is being currently built.</param>
         private static void OnErrorDataReceived(DataReceivedEventArgs e, string sourceCodeDirectory)
         {
+            // Sometimes empty strings and not "empty" (closer to null) strings are being sent
+            //     and we don't want to log that into our console.
             if (! string.IsNullOrEmpty(e.Data))
             {
-                Console.Error.WriteLine($"{Path.GetFileName(sourceCodeDirectory)} | {e.Data}");
+                ConsoleUtility.Error($"{Path.GetFileName(sourceCodeDirectory)} | {e.Data}");
             }
         }
 
+        /// <summary>
+        /// Convert a given arguments string with proper data for usage in other methods.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
+        /// <param name="arguments">A string of arguments to be converted with proper data.</param>
+        /// <returns>Converted arguments string with proper data.</returns>
         private string ConvertArgumentVariables(string sourceCodeDirectory, string arguments)
         {
             /*
-             * Available variables:
-             *     $SOURCE_DIR_FULL$
-             *     $SOURCE_DIR_PATH$
-             *     $SOURCE_DIR_NAME$
-             * 
-             *     $TARGET_DIR_FULL$
-             *     $TEMP_DIR_FULL$
-             *     $HEPHAESTUS_DIR_FULL$
-             *
-             *     $PRIVATE_KEY_FULL$
-             *     $PRIVATE_KEY_NAME$
-             *
-             *     $PROJECT_PREFIX$
+             *     Available variables      |    Examples
+             *     --------------------------------------------------------------------------------------------------------
+             *     $SOURCE_DIR_FULL$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons
+             *     $SOURCE_DIR_PATH$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons\data_f_achilles
+             *     $SOURCE_DIR_NAME$        |    data_f_achilles
+             *                              |
+             *     $TARGET_DIR_FULL$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons\output
+             *     $TEMP_DIR_FULL$          |    C:\Users\User\AppData\Local\Temp
+             *     $HEPHAESTUS_DIR_FULL$    |    C:\Users\User\Source\Repos\Hephaestus\Hephaestus\bin\Debug\netcoreapp2.2
+             *                              |
+             *     $PRIVATE_KEY_FULL$       |    H:\Steam\steamapps\common\Arma 3\myKey.biprivatekey
+             *     $PRIVATE_KEY_NAME$       |    myKey
+             *                              |
+             *     $PROJECT_PREFIX$         |    achilles
              */
 
+            // Get our data for the variables.
             string sourceCodeDirectoryFull = Project.SourceDirectory;
             string sourceCodeDirectoryPath = sourceCodeDirectory;
             string sourceCodeDirectoryName = Path.GetFileName(sourceCodeDirectory);
@@ -98,6 +124,7 @@ namespace Hephaestus.Classes
 
             string projectPrefix = Project.ProjectPrefix;
 
+            // Replace the variables in the arguments string with our data.
             arguments = arguments.Replace("$SOURCE_DIR_FULL$", sourceCodeDirectoryFull);
             arguments = arguments.Replace("$SOURCE_DIR_PATH$", sourceCodeDirectoryPath);
             arguments = arguments.Replace("$SOURCE_DIR_NAME$", sourceCodeDirectoryName);
