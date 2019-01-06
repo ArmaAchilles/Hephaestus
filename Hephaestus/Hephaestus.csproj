@@ -4,7 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <Deterministic>False</Deterministic>
-        <ApplicationIcon>Resources\AchillesLogo.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\Hephaestus.ico</ApplicationIcon>
         <Authors>ArmaAchilles</Authors>
         <Company />
         <Description>Application that is a wrapper around Bohemia Interactive's AddonBuilder or KoffeinFlummi's Armake to build PBOs for BI's game titles.</Description>

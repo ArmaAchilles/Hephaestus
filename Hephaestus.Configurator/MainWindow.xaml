@@ -16,7 +16,7 @@
                  Background="Transparent"
                  RenderOptions.EdgeMode="Aliased"
                  RenderOptions.BitmapScalingMode="HighQuality">
-                <Image Source="Resources/AchillesLogo.ico"></Image>
+                <Image Source="Resources/Hephaestus.ico"></Image>
             </Grid>
         </DataTemplate>
     </controls:MetroWindow.IconTemplate>

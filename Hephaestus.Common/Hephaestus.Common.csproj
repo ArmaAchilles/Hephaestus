@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <Deterministic>False</Deterministic>
-        <ApplicationIcon>Resources\AchillesLogo.ico</ApplicationIcon>
+        <ApplicationIcon>Resources\Hephaestus.ico</ApplicationIcon>
         <Authors>ArmaAchilles</Authors>
         <Description>Shared library for Hephaestus.</Description>
         <Copyright>Copyright © ArmaAchilles 2018</Copyright>
