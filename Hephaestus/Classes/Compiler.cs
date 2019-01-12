@@ -54,7 +54,7 @@ namespace Hephaestus.Classes
                 {
                     // Get the file name (with extension) of the entered game executable path (e.g. arma3_x64.exe)
                     //     which will be closed if open.
-                    Game.Shutdown(Path.GetFileName(project.Game.GameExecutable));
+                    Game.Shutdown(Path.GetFileNameWithoutExtension(project.Game.GameExecutable));
                 }
 
                 // Get all source directories and store them in an array (e.g. data_f_achilles, functions_f_achilles, etc.)
