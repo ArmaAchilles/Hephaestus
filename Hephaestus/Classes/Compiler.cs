@@ -19,6 +19,8 @@ namespace Hephaestus.Classes
         private static int ExitedAddonBuilders { get; set; }
         // Number of directories that were not built because their contents didn't change.
         private static int NotBuiltDirectories { get; set; }
+        // Directory paths that should be built because the hashes don't match (source code directory, has hash mismatch).
+        private static Dictionary<string, bool> DirectoriesToBeBuilt { get; set; }
 
         /// <summary>
         /// Prepares the building of the source directories.
@@ -93,12 +95,11 @@ namespace Hephaestus.Classes
                             if (selectedHash.Sha1 == hash.Sha1)
                             {
                                 NotBuiltDirectories++;
-                                ConsoleUtility.Info($"Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
+                                DirectoriesToBeBuilt.Add(sourceCodeDirectory, false);
                             }
                             else
                             {
-                                // If the checksums are now different then we build the directory.
-                                BuildDirectory(sourceCodeDirectory, project);
+                                DirectoriesToBeBuilt.Add(sourceCodeDirectory, true);
                             }
                         }
                         else
@@ -106,8 +107,22 @@ namespace Hephaestus.Classes
                             // If the JSON doesn't contain the current source code directories hash then we add it to the list
                             //    but leave it as an empty hash for now.
                             project.Hashes.Add(sourceCodeDirectory, new Hash());
-                            BuildDirectory(sourceCodeDirectory, project);
+                            DirectoriesToBeBuilt.Add(sourceCodeDirectory, true);
                         }
+                    }
+                }
+
+                // To remove wrong counting of directories built, we now are going to build all the files that need to be built.
+                // string: source code directory, bool: has hash mismatch
+                foreach ((string sourceCodeDirectory, bool hasHashMismatch) in DirectoriesToBeBuilt)
+                {
+                    if (hasHashMismatch)
+                    {
+                        BuildDirectory(sourceCodeDirectory, project);
+                    }
+                    else
+                    {
+                        ConsoleUtility.Info($"Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
                     }
                 }
 
