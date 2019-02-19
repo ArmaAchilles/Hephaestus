@@ -20,7 +20,7 @@ namespace Hephaestus.Classes
         // Number of directories that were not built because their contents didn't change.
         private static int NotBuiltDirectories { get; set; }
         // Directory paths that should be built because the hashes don't match (source code directory, has hash mismatch).
-        private static Dictionary<string, bool> DirectoriesToBeBuilt { get; set; }
+        private static Dictionary<string, bool> DirectoriesToBeBuilt { get; set; } = new Dictionary<string, bool>();
 
         /// <summary>
         /// Prepares the building of the source directories.
