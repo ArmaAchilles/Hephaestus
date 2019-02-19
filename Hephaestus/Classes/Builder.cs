@@ -1,183 +1,144 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using Hephaestus.Classes.Builders;
-using Hephaestus.Utilities;
-using HephaestusCommon.Classes;
+using Hephaestus.Common.Classes;
+using Hephaestus.Common.Utilities;
 
 namespace Hephaestus.Classes
 {
-    public static class Builder
+    public class Builder
     {
-        private static readonly List<int> ExitCodes = new List<int>();
-        private static int SourceCodeDirectoryCount { get; set; }
-        private static int LaunchedAddonBuilders { get; set; }
-        private static int ExitedAddonBuilders { get; set; }
-        private static int NotBuiltDirectories { get; set; }
+        public Process Process { get; private set; }
+        private Project Project { get; }
+        private Driver Driver { get; }
 
-        public static int Build(Project project, bool forceBuild)
+        /// <summary>
+        /// Upon creation it automatically starts building a single folder with the currently selected driver.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
+        /// <param name="project">The current selected project's data.</param>
+        public Builder(string sourceCodeDirectory, Project project)
         {
-            while (true)
+            Project = project;
+            Driver = DriverUtility.GetSelectedDriver(project);
+            
+            Build(sourceCodeDirectory);
+        }
+        
+        /// <summary>
+        /// Build a single source code directory.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
+        private void Build(string sourceCodeDirectory)
+        {
+            try
             {
-                // Reset counts (in case of a rebuild)
-                SourceCodeDirectoryCount = 0;
-                LaunchedAddonBuilders = 0;
-                ExitedAddonBuilders = 0;
-                NotBuiltDirectories = 0;
-
-                if (forceBuild)
+                Process process = new Process
                 {
-                    Console.WriteLine("Rebuilding...");
-                }
-
-                if (project.ShutdownGameBeforeBuilding)
-                {
-                    Game.Shutdown(new List<string> {"arma3", "arma3_x64"});
-                }
-
-                string[] sourceCodeDirectories = GetSourceCodeDirectories(project.SourceDirectory);
-                SourceCodeDirectoryCount = sourceCodeDirectories.Length;
-
-                Console.WriteLine($"info: Found {SourceCodeDirectoryCount} source code directories");
-
-                if (project.Hashes == null)
-                {
-                    project.Hashes = new Dictionary<string, Hash>();
-                }
-
-                foreach (string sourceCodeDirectory in sourceCodeDirectories)
-                {
-                    Hash hash = new Hash(sourceCodeDirectory);
-
-                    if (forceBuild)
+                    StartInfo = new ProcessStartInfo
                     {
-                        BuildDirectory(sourceCodeDirectory, project);
-                    }
-                    else
-                    {
-                        if (project.Hashes.ContainsKey(sourceCodeDirectory))
-                        {
-                            Hash selectedHash = project.Hashes[sourceCodeDirectory];
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = false,
 
-                            if (selectedHash.Sha1 == hash.Sha1)
-                            {
-                                NotBuiltDirectories++;
-                                Console.WriteLine($"info: Not building {Path.GetFileName(sourceCodeDirectory)} because it hasn't changed");
-                            }
-                            else
-                            {
-                                BuildDirectory(sourceCodeDirectory, project);
-                            }
-                        }
-                        else
-                        {
-                            project.Hashes.Add(sourceCodeDirectory, new Hash());
-                            BuildDirectory(sourceCodeDirectory, project);
-                        }
-                    }
-                }
+                        UseShellExecute = false,
 
-                // Wait until all builds are complete
-                while (LaunchedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount || ExitedAddonBuilders + NotBuiltDirectories != SourceCodeDirectoryCount)
-                {
-                    Thread.Sleep(100);
-                }
+                        CreateNoWindow = true,
 
-                if (project.StartGameAfterBuilding)
-                {
-                    Game.Launch(project.Game.GameExecutable, project.Game.GameExecutableArguments);
-                }
-
-                // If doesn't only have successful exit codes
-                lock (OnBuilderExitLock)
-                {
-                    // Check if any non-zero exit codes were present
-                    int exitCode = ExitCodes.All(v => v == 0) ? 0 : 1;
-                    
-                    if (NotBuiltDirectories == SourceCodeDirectoryCount)
-                    {
-                        if (! ConsoleUtility.AskYesNoQuestion("Rebuild?"))
-                        {
-                            return exitCode;
-                        }
+                        FileName = Driver.Path,
                         
-                        continue;
-                    }
+                        WorkingDirectory = Path.GetTempPath(),
 
-                    project.Save();
+                        Arguments = ConvertArgumentVariables(sourceCodeDirectory, Driver.Arguments)
+                    },
 
-                    return exitCode;
-                }
-            }
-        }
+                    EnableRaisingEvents = true
+                };
 
-        private static void BuildDirectory(string sourceCodeDirectory, Project project)
-        {
-            LaunchedAddonBuilders++;
-
-            Console.WriteLine($"info: Building {Path.GetFileName(sourceCodeDirectory)} ({LaunchedAddonBuilders}/{SourceCodeDirectoryCount - NotBuiltDirectories})");
-            if (project.UseArmake)
-            {
-                Armake armake = new Armake(sourceCodeDirectory, project);
-
-                armake.Process.Exited += (sender, eventArgs) =>
-                    OnBuilderExit(sourceCodeDirectory, armake.Process.ExitCode,
-                        armake.Process.StartTime, armake.Process.ExitTime, project);
-            }
-            else
-            {
-                AddonBuilder addonBuilder = new AddonBuilder(sourceCodeDirectory, project);
-
-                addonBuilder.Process.Exited += (sender, eventArgs) =>
-                    OnBuilderExit(sourceCodeDirectory, addonBuilder.Process.ExitCode,
-                        addonBuilder.Process.StartTime, addonBuilder.Process.ExitTime, project);
-            }
-        }
-
-        private static readonly object OnBuilderExitLock = new object();
-        private static void OnBuilderExit(string sourceCodeDirectory, int exitCode, DateTime startTime, DateTime exitTime, Project project)
-        {
-            // Needs a lock due to a race condition if multiple AddonBuilders exit at the same time
-            lock (OnBuilderExitLock)
-            {
-                ExitedAddonBuilders++;
+                process.Start();
                 
-                ExitCodes.Add(exitCode);
+                // Start listening for Console.Error outputs
+                process.BeginErrorReadLine();
+                
+                // If any Console.Error data has been received then call OnErrorDataReceived
+                process.ErrorDataReceived += (sender, args) => OnErrorDataReceived(args, sourceCodeDirectory);
 
-                if (exitCode == 0)
-                {
-                    double timeToBuild = Math.Round((exitTime - startTime).TotalSeconds, 3);
-                    
-                    Console.WriteLine(
-                        $"info: Completed building {Path.GetFileName(sourceCodeDirectory)} in {timeToBuild}s" 
-                            + $" ({ExitedAddonBuilders}/{LaunchedAddonBuilders})");
-                    
-                    project.Hashes[sourceCodeDirectory].Sha1 = new Hash(sourceCodeDirectory).Sha1;
-                }
-                else
-                {
-                    Console.Error.WriteLine(
-                        $"error: Failed to build {Path.GetFileName(sourceCodeDirectory)}. Exit code {exitCode}");
-                }
+                Process = process;
+            }
+            catch (Exception e)
+            {
+                ConsoleUtility.Error($"Builder failed to launch for {Path.GetFileName(sourceCodeDirectory)} because {e.Message}");
             }
         }
 
-        private static string[] GetSourceCodeDirectories(string sourceDirectory)
+        /// <summary>
+        /// If any Console.Error stream data will be heard then log the received data to the console window.
+        /// </summary>
+        /// <param name="e">Event data from Console.Error stream.</param>
+        /// <param name="sourceCodeDirectory">The directory that is being currently built.</param>
+        private static void OnErrorDataReceived(DataReceivedEventArgs e, string sourceCodeDirectory)
         {
-            string[] sourceCodeDirectories;
-
-            if (Directory.Exists(sourceDirectory))
+            // Sometimes empty strings and not "empty" (closer to null) strings are being sent
+            //     and we don't want to log that into our console.
+            if (! string.IsNullOrEmpty(e.Data))
             {
-                sourceCodeDirectories = Directory.GetDirectories(sourceDirectory);
+                ConsoleUtility.Error($"{Path.GetFileName(sourceCodeDirectory)} | {e.Data}");
             }
-            else
-            {
-                throw new DirectoryNotFoundException($"{sourceDirectory} does not exist.");
-            }
+        }
 
-            return sourceCodeDirectories;
+        /// <summary>
+        /// Convert a given arguments string with proper data for usage in other methods.
+        /// </summary>
+        /// <param name="sourceCodeDirectory">The directory that will be built.</param>
+        /// <param name="arguments">A string of arguments to be converted with proper data.</param>
+        /// <returns>Converted arguments string with proper data.</returns>
+        private string ConvertArgumentVariables(string sourceCodeDirectory, string arguments)
+        {
+            /*
+             *     Available variables      |    Examples
+             *     --------------------------------------------------------------------------------------------------------
+             *     $SOURCE_DIR_FULL$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons
+             *     $SOURCE_DIR_PATH$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons\data_f_achilles
+             *     $SOURCE_DIR_NAME$        |    data_f_achilles
+             *                              |
+             *     $TARGET_DIR_FULL$        |    H:\Steam\steamapps\common\Arma 3\Achilles\@Achilles\addons\output
+             *     $TEMP_DIR_FULL$          |    C:\Users\User\AppData\Local\Temp
+             *     $HEPHAESTUS_DIR_FULL$    |    C:\Users\User\Source\Repos\Hephaestus\Hephaestus\bin\Debug\netcoreapp2.2
+             *                              |
+             *     $PRIVATE_KEY_FULL$       |    H:\Steam\steamapps\common\Arma 3\myKey.biprivatekey
+             *     $PRIVATE_KEY_NAME$       |    myKey
+             *                              |
+             *     $PROJECT_PREFIX$         |    achilles
+             */
+
+            // Get our data for the variables.
+            string sourceCodeDirectoryFull = Project.SourceDirectory;
+            string sourceCodeDirectoryPath = sourceCodeDirectory;
+            string sourceCodeDirectoryName = Path.GetFileName(sourceCodeDirectory);
+
+            string targetDirectoryFull = Project.TargetDirectory;
+            string tempDirectoryFull = Path.GetTempPath();
+            string hephaestusDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+            string privateKeyFull = Project.PrivateKeyFile;
+            string privateKeyName = Path.GetFileName(privateKeyFull);
+
+            string projectPrefix = Project.ProjectPrefix;
+
+            // Replace the variables in the arguments string with our data.
+            arguments = arguments.Replace("$SOURCE_DIR_FULL$", sourceCodeDirectoryFull);
+            arguments = arguments.Replace("$SOURCE_DIR_PATH$", sourceCodeDirectoryPath);
+            arguments = arguments.Replace("$SOURCE_DIR_NAME$", sourceCodeDirectoryName);
+            
+            arguments = arguments.Replace("$TARGET_DIR_FULL$", targetDirectoryFull);
+            arguments = arguments.Replace("$TEMP_DIR_FULL$", tempDirectoryFull);
+            arguments = arguments.Replace("$HEPHAESTUS_DIR_FULL$", hephaestusDirectory);
+            
+            arguments = arguments.Replace("$PRIVATE_KEY_FULL$", privateKeyFull);
+            arguments = arguments.Replace("$PRIVATE_KEY_NAME$", privateKeyName);
+            
+            arguments = arguments.Replace("$PROJECT_PREFIX$", projectPrefix);
+
+            return arguments;
         }
     }
 }
