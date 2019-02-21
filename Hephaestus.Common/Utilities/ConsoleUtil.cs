@@ -4,38 +4,33 @@ using Hephaestus.Common.Classes;
 
 namespace Hephaestus.Common.Utilities
 {
-    public static class ConsoleUtility
+    /// <summary>
+    /// Provides a set of faculties to handle various console related tasks.
+    /// </summary>
+    public static class ConsoleUtil
     {
         /// <summary>
-        /// Loops till the user gives a Y or N answer which then is converted into a boolean.
+        /// Prints a given message to the console which acts as a question to the user from which they respond with either Y for yes or N for no.
         /// </summary>
-        /// <param name="question">Question to ask the user. Question is transformed into 'questionHere (Y/N): '.</param>
-        /// <returns>Returns true if user selected yes and returns false if user selected no.</returns>
+        /// <param name="question">A string to output to the console and act as a question. The provided string is outputed in the following format: 'questionHere (Y/N): '.</param>
+        /// <returns>Returns true if the user entered Y for yes or false if the user entered N for no.</returns>
         public static bool AskYesNoQuestion(string question)
         {
-            bool result;
-            
+            string response;
+            Console.Write($"{question} (Y/N): ");
+
             while (true)
             {
-                Console.Write($"{question} (Y/N): ");
-                string key = Console.ReadLine()?.ToLower();
-                
-                if (key == "y")
-                {
-                    result = true;
-                    break;
-                }
+                response = Console.ReadLine()?.ToLower();
 
-                if (key == "n")
+                if (response != "y" || response != "yes" || response != "n" || response != "no")
                 {
-                    result = false;
-                    break;
+                    Console.WriteLine($"{response} is not a valid anwser to the given question: {question}. Please enter either Y for yes or N for no.");
+                    continue;
                 }
-
-                Console.WriteLine("Incorrect selection. Try again.");
+                break;
             }
-
-            return result;
+            return response == "y" || response == "yes" ? true : false;
         }
 
         /// <summary>
@@ -64,7 +59,7 @@ namespace Hephaestus.Common.Utilities
             while (true)
             {
                 Console.Write($"{message}: ");
-                
+
                 enteredString = Console.ReadLine();
 
                 if (pathType == PathType.Directory)
@@ -73,7 +68,7 @@ namespace Hephaestus.Common.Utilities
                     {
                         break;
                     }
-    
+
                     Console.WriteLine("That is not a valid directory. Try again.");
                 }
                 else
