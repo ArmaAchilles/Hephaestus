@@ -12,7 +12,7 @@ namespace Hephaestus.Common.Utilities
         /// <summary>
         /// Prints a given message to the console which acts as a question to the user from which they respond with either Y for yes or N for no.
         /// </summary>
-        /// <param name="question">A string to output to the console and act as a question. The provided string is outputed in the following format: 'questionHere (Y/N): '.</param>
+        /// <param name="question">String to output to the console and act as a question to the user. The provided string is outputed in the following format: 'questionHere (Y/N): '.</param>
         /// <returns>Returns true if the user entered Y for yes or false if the user entered N for no.</returns>
         public static bool AskYesNoQuestion(string question)
         {
@@ -34,17 +34,15 @@ namespace Hephaestus.Common.Utilities
         }
 
         /// <summary>
-        /// Ask the user to enter a string.
+        /// Prints a given message to the console and prompts the user to enter a string.
         /// </summary>
-        /// <param name="message">Message displayed to the user. Message is transformed into 'messageHere: '.</param>
-        /// <returns></returns>
+        /// <param name="message">String to output to the console and act as a message to the user. The provided string is outputed in the following format: 'messageHere: '.</param>
+        /// <returns>Returns the entered string</returns>
         public static string AskToEnterString(string message)
         {
+            //TODO: prevent the user from entering an empty string
             Console.Write($"{message}: ");
-
-            string enteredString = Console.ReadLine();
-
-            return enteredString;
+            return Console.ReadLine();
         }
 
         /// <summary>
