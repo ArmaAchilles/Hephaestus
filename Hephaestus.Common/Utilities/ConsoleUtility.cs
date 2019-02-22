@@ -84,28 +84,28 @@ namespace Hephaestus.Common.Utilities
         }
 
         /// <summary>
-        /// Logs an error message to the console.
+        /// Prints a given message to the console acting as a error message to the user.
         /// </summary>
-        /// <param name="message">Message to the user. Message is transformed into 'error: messageHere'.</param>
-        public static void Error(string message)
+        /// <param name="message">String to output to the console and act as a error message to the user. The provided string is outputed in the following format: 'error: messageHere'.</param>
+        public static void PrintErrorMessage(string message)
         {
             Console.Error.WriteLine($"error: {message}");
         }
 
         /// <summary>
-        /// Logs a warning to the console.
+        /// Prints a given message to the console acting as a warning message to the user.
         /// </summary>
-        /// <param name="message">Message to the user. Message is transformed into 'warning: messageHere'.</param>
-        public static void Warning(string message)
+        /// <param name="message">String to output to the console and act as a warning message to the user. The provided string is outputed in the following format: 'warning: messageHere'.</param>
+        public static void PrintWarningMessage(string message)
         {
             Console.WriteLine($"warning: {message}");
         }
 
         /// <summary>
-        /// Logs an info message to the console.
+        /// Prints a given message to the console as a informative message to the user.
         /// </summary>
-        /// <param name="message">Message to the user. Message is transformed into 'info: messageHere'.</param>
-        public static void Info(string message)
+        /// <param name="message">String to output to the console and act as a informative message to the user. The provided string is outputed in the following format: 'info: messageHere'.</param>
+        public static void PrintInfoMessage(string message)
         {
             Console.WriteLine($"info: {message}");
         }
