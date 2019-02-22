@@ -41,19 +41,7 @@ namespace Hephaestus.Common.Utilities
         public static string AskToEnterString(string message)
         {
             Console.Write($"{message}: ");
-            string enteredString;
-
-            while (true)
-            {
-                enteredString = Console.ReadLine();
-                if (enteredString == string.Empty)
-                {
-                    Console.WriteLine("Input cannot be nothing, please try again.");
-                    continue;
-                }
-                break;
-            }
-            return enteredString;
+            return Console.ReadLine();
         }
 
         /// <summary>
