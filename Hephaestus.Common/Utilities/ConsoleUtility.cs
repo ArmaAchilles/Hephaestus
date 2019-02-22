@@ -7,7 +7,7 @@ namespace Hephaestus.Common.Utilities
     /// <summary>
     /// Provides a set of faculties to handle various console related tasks.
     /// </summary>
-    public static class ConsoleUtil
+    public static class ConsoleUtility
     {
         /// <summary>
         /// Prints a given message to the console which acts as a question to the user from which they respond with either Y for yes or N for no.

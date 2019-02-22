@@ -24,13 +24,13 @@ namespace Hephaestus.Common.Classes
         {
             try
             {
-                ConsoleUtil.Info($"Starting {Path.GetFileName(game.GameExecutable)}");
+                ConsoleUtility.Info($"Starting {Path.GetFileName(game.GameExecutable)}");
                 
                 Process.Start(new ProcessStartInfo(game.GameExecutable, game.GameExecutableArguments));
             }
             catch (Exception e)
             {
-                ConsoleUtil.Error($"Failed to start {game.GameExecutable} because {e.Message}");
+                ConsoleUtility.Error($"Failed to start {game.GameExecutable} because {e.Message}");
             }
         }
 
@@ -55,7 +55,7 @@ namespace Hephaestus.Common.Classes
                     continue;
                 }
                 
-                ConsoleUtil.Info($"Found {processName}. Terminating process...");
+                ConsoleUtility.Info($"Found {processName}. Terminating process...");
 
                 try
                 {
@@ -71,7 +71,7 @@ namespace Hephaestus.Common.Classes
                 }
                 catch (Exception e)
                 {
-                    ConsoleUtil.Error($"error: Failed to shutdown {process} because {e.Message}");
+                    ConsoleUtility.Error($"error: Failed to shutdown {process} because {e.Message}");
                 }
             }
         }
