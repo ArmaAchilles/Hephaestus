@@ -75,7 +75,7 @@ namespace Hephaestus.Common.Utilities
         /// Prints a given message to the console acting as a error message to the user.
         /// </summary>
         /// <param name="message">String to output to the console and act as a error message to the user. The provided string is outputed in the following format: 'error: messageHere'.</param>
-        public static void PrintErrorMessage(string message)
+        public static void PrintError(string message)
         {
             Console.Error.WriteLine($"error: {message}");
         }
@@ -84,7 +84,7 @@ namespace Hephaestus.Common.Utilities
         /// Prints a given message to the console acting as a warning message to the user.
         /// </summary>
         /// <param name="message">String to output to the console and act as a warning message to the user. The provided string is outputed in the following format: 'warning: messageHere'.</param>
-        public static void PrintWarningMessage(string message)
+        public static void PrintWarning(string message)
         {
             Console.WriteLine($"warning: {message}");
         }
@@ -93,7 +93,7 @@ namespace Hephaestus.Common.Utilities
         /// Prints a given message to the console as a informative message to the user.
         /// </summary>
         /// <param name="message">String to output to the console and act as a informative message to the user. The provided string is outputed in the following format: 'info: messageHere'.</param>
-        public static void PrintInfoMessage(string message)
+        public static void PrintInfo(string message)
         {
             Console.WriteLine($"info: {message}");
         }
