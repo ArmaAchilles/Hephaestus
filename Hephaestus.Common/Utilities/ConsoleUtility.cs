@@ -34,7 +34,7 @@ namespace Hephaestus.Common.Utilities
         }
 
         /// <summary>
-        /// Prints a given message to the console and prompts the user to enter a string.
+        /// Prints a given message to the console and then prompts the user to enter a string.
         /// </summary>
         /// <param name="message">String to output to the console and act as a message to the user. The provided string is outputed in the following format: 'messageHere: '.</param>
         /// <returns>Returns the entered string</returns>
@@ -57,41 +57,30 @@ namespace Hephaestus.Common.Utilities
         }
 
         /// <summary>
-        /// Ask the user to enter either a directory or a file path.
+        /// Prints a given message to the console and then prompts the user to enter a filesystem path corresponding to either a directory or a file.
         /// </summary>
-        /// <param name="message">Message displayed to the user. Message is transformed into 'messageHere: '.</param>
-        /// <param name="pathType">Select what type of path should the user enter.</param>
+        /// <param name="message">String to output to the console and act as a message to the user. The provided string is outputed in the following format: 'messageHere: '.</param>
+        /// <param name="pathType">The type of path the user needs to enter. Either a directory or an individual file.</param>
         /// <returns>Path to the directory or file.</returns>
-        public static string AskToEnterPath(string message, PathType pathType)
+        public static string AskToEnterFileSystemPath(string message, PathType pathType)
         {
-            string enteredString;
+            string enteredPath;
+            Console.Write($"{message}: ");
+
             while (true)
             {
-                Console.Write($"{message}: ");
-
-                enteredString = Console.ReadLine();
-
-                if (pathType == PathType.Directory)
+                enteredPath = Console.ReadLine();
+                if (Directory.Exists(enteredPath) || File.Exists(enteredPath))
                 {
-                    if (Directory.Exists(enteredString))
-                    {
-                        break;
-                    }
-
-                    Console.WriteLine("That is not a valid directory. Try again.");
+                    break;
                 }
-                else
-                {
-                    if (File.Exists(enteredString))
-                    {
-                        break;
-                    }
 
-                    Console.WriteLine("That is not a valid file. Try again.");
-                }
+                string invalidPathMessage = pathType == PathType.Directory ?
+                    $"{enteredPath} does not exist or does not represent a valid directory path. Please try again and enter a valid directory path." :
+                    $"{enteredPath} does not exist or does not represent a valid directory path. Please try again and enter a valid directory path.";
+                Console.WriteLine(invalidPathMessage);
             }
-
-            return enteredString;
+            return enteredPath;
         }
 
         /// <summary>
