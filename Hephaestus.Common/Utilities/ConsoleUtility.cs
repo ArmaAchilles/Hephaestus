@@ -65,7 +65,7 @@ namespace Hephaestus.Common.Utilities
 
                 string invalidPathMessage = pathType == PathType.Directory ?
                     $"{enteredPath} does not exist or does not represent a valid directory path. Please try again and enter a valid directory path." :
-                    $"{enteredPath} does not exist or does not represent a valid directory path. Please try again and enter a valid directory path.";
+                    $"{enteredPath} does not exist or does not represent a valid file path. Please try again and enter a valid file path.";
                 Console.WriteLine(invalidPathMessage);
             }
             return enteredPath;
