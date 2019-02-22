@@ -40,9 +40,20 @@ namespace Hephaestus.Common.Utilities
         /// <returns>Returns the entered string</returns>
         public static string AskToEnterString(string message)
         {
-            //TODO: prevent the user from entering an empty string
             Console.Write($"{message}: ");
-            return Console.ReadLine();
+            string enteredString;
+
+            while (true)
+            {
+                enteredString = Console.ReadLine();
+                if (enteredString == string.Empty)
+                {
+                    Console.WriteLine("Input cannot be nothing, please try again.");
+                    continue;
+                }
+                break;
+            }
+            return enteredString;
         }
 
         /// <summary>
