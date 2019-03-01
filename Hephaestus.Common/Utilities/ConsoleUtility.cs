@@ -58,7 +58,7 @@ namespace Hephaestus.Common.Utilities
             while (true)
             {
                 enteredPath = Console.ReadLine();
-                if (Directory.Exists(enteredPath) || File.Exists(enteredPath))
+                if ((Directory.Exists(enteredPath) && pathType == PathType.Directory) || (File.Exists(enteredPath) && pathType == PathType.File))
                 {
                     break;
                 }
